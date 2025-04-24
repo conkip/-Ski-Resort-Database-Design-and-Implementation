@@ -1,1 +1,1 @@
-# -Ski-Resort-Database-Design-and-Implementation
+# Ski-Resort-Database-Design-and-Implementation
