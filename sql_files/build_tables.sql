@@ -49,6 +49,7 @@ CREATE TABLE group14.Lift (
     openTime TIMESTAMP,
     closeTime TIMESTAMP,
     abilityLevel VARCHAR2(15),
+    status NUMBER(1),
     primary key (liftID)
     );
 

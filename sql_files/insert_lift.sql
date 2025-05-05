@@ -3,7 +3,8 @@ INSERT INTO group14.Lift VALUES (
     'Mountain Escape',
     TO_TIMESTAMP('2025-04-15 07:00:00', 'YYYY-MM-DD HH24:MI:SS'),
     TO_TIMESTAMP('2025-04-15 19:00:00', 'YYYY-MM-DD HH24:MI:SS'),
-    'Intermediate'
+    'Intermediate',
+    1
 );
 
 INSERT INTO group14.Lift VALUES (
@@ -11,7 +12,8 @@ INSERT INTO group14.Lift VALUES (
     'Snow Train',
     TO_TIMESTAMP('2025-04-15 07:00:00', 'YYYY-MM-DD HH24:MI:SS'),
     TO_TIMESTAMP('2025-04-15 19:00:00', 'YYYY-MM-DD HH24:MI:SS'),
-    'Advanced'
+    'Advanced',
+    1
 );
 
 INSERT INTO group14.Lift VALUES (
@@ -19,5 +21,6 @@ INSERT INTO group14.Lift VALUES (
     'Bunny Hop',
     TO_TIMESTAMP('2025-04-15 07:00:00', 'YYYY-MM-DD HH24:MI:SS'),
     TO_TIMESTAMP('2025-04-15 19:00:00', 'YYYY-MM-DD HH24:MI:SS'),
-    'Beginner'
+    'Beginner',
+    0
 );
