@@ -1,7 +1,9 @@
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -140,7 +142,7 @@ public class Queries {
   |            ID, name, and all the ski lessons they have purchased, including
   |            the number of remaining sessions, instructor name, and scheduled time.
   |
-  |  Pre-condition:  The LessonPurchase, LessonOffering, Employee, and Member tables 
+  |  Pre-condition:  The LessonPurchase, LessonOffering, Employee, and Member tables
   |      must exist and be populated with valid data.
   |
   |  Post-condition:  A list of open, intermediate trails is printed
@@ -163,7 +165,9 @@ public class Queries {
             + "JOIN group14.lessonOffering lo ON lo.lessonID = lp.lessonID\n"
             + "JOIN group14.Employee e ON lo.instructorID = e.employeeID\n"
             + "JOIN group14.Member m ON m.memberID = lp.memberID\n"
-            + "WHERE m.memberID = \"" + memberID + "\"";
+            + "WHERE m.memberID = \""
+            + memberID
+            + "\"";
 
     try {
       // Execute the query
@@ -179,10 +183,17 @@ public class Queries {
         String instName = rset.getString("instructor_name");
         String scheduledTime = rset.getString("scheduled_time");
 
-        String output = "Lesson #" +count + ": Remaining Sessions: " + remainingSessions
-                      + ", Instructor Name: " + instName + ", Scheduled Time: " + scheduledTime;
+        String output =
+            "Lesson #"
+                + count
+                + ": Remaining Sessions: "
+                + remainingSessions
+                + ", Instructor Name: "
+                + instName
+                + ", Scheduled Time: "
+                + scheduledTime;
         System.out.println(output);
-        count ++;
+        count++;
       }
     } catch (SQLException e) { // Handle SQL exceptions
       System.err.println("*** SQLException:  " + e.getMessage());
@@ -190,14 +201,14 @@ public class Queries {
       System.err.println("\tErrorCode: " + e.getErrorCode());
     }
   }
-  
+
   /*---------------------------------------------------------------------
   |  Method query2
   |
   |  Purpose:  For a specified Pass ID, this method returns all of the Equipment rentals
   |			   Associated with it, as well as the Lift uses associated as well.
   |
-  |  Pre-condition:  The Pass, Lift, LiftLog, Rental, and Equipment tables 
+  |  Pre-condition:  The Pass, Lift, LiftLog, Rental, and Equipment tables
   |      must exist and be populated with valid data.
   |
   |  Post-condition:  This method prints the PassID, LiftID, Trail, and DateTime of the
@@ -208,58 +219,71 @@ public class Queries {
   |  Returns:  None.
   *-------------------------------------------------------------------*/
   private void query2() {
-	  String pass = null;
-	  try (Scanner sc = new Scanner(System.in)) {
-		  System.out.print("Enter Pass ID to view information: ");
-		  System.out.println();
-		  pass = sc.nextLine();
-	  }
-	  
-	  String query1 = "Select passID as Pass, liftID, liftName as Trail, dateTime\n"
-		  		+ "From group14.Pass \n"
-		  		+ "JOIN group14.LiftLog USING (passID)\n"
-		  		+ "JOIN group14.Lift USING (liftID) \n"
-		  		+ "WHERE Pass = " + pass + ";\n";
-		  
-		  String query2 = "Select passID as Pass, type, rentalTime, returnStatus\n"
-		  		+ "From group14.Pass \n"
-		  		+ "JOIN group14.Rental USING (passID)\n"
-		  		+ "JOIN group14.Equipment USING (equipmentID) \n"
-		  		+ "WHERE Pass = " + pass + ";\n";
-		  
-		  try {
-			  rset = stmt.executeQuery(query1);
-			  
-			  System.out.println(pass + " Lift History:");
-			  System.out.println("---------------");
-			  
-			  while (rset.next()) {
-				  String idno = rset.getString("Pass");
-				  String liftid = rset.getInt("liftID");
-				  String trail = rset.getString("Trail");
-				  String time = rset.getDate("dateTime");
-				  System.out.println("Pass: " + idno + ", Lift ID: " + liftid + ", Name: " + trail ", Time: " + time);
-			  }
-			  
-			  rset = stmt.executeQuery(query2);
-			  
-			  System.out.println(pass + " Rental History:");
-			  System.out.println("---------------");
-			  
-			  while (rset.next()) {
-				  String idno = rset.getString("Pass");
-				  String eqtype = rset.getString("type");
-				  String rentalTime = rset.getDate("rentalTime");
-				  String status = rset.getInt("returnStatus");
-				  System.out.println("Pass: " + idno + ", Type: " + eqtype + ", Rental Time: " + rentalTime ", Rental Status: " + status);
-			  }
-		  }
-	  }
-	  catch (SQLException e) { // Handle SQL exceptions
-	      System.err.println("*** SQLException, could not execute query:  " + e.getMessage());
-	      System.err.println("\tSQLState:  " + e.getSQLState());
-	      System.err.println("\tErrorCode: " + e.getErrorCode());
-	  }
+    String pass = null;
+    try (Scanner sc = new Scanner(System.in)) {
+      System.out.print("Enter Pass ID to view information: ");
+      System.out.println();
+      pass = sc.nextLine();
+    }
+
+    String query1 =
+        "Select passID as Pass, liftID, liftName as Trail, dateTime\n"
+            + "From group14.Pass \n"
+            + "JOIN group14.LiftLog USING (passID)\n"
+            + "JOIN group14.Lift USING (liftID) \n"
+            + "WHERE Pass = "
+            + pass
+            + ";\n";
+
+    String query2 =
+        "Select passID as Pass, type, rentalTime, returnStatus\n"
+            + "From group14.Pass \n"
+            + "JOIN group14.Rental USING (passID)\n"
+            + "JOIN group14.Equipment USING (equipmentID) \n"
+            + "WHERE Pass = "
+            + pass
+            + ";\n";
+
+    try {
+      rset = stmt.executeQuery(query1);
+
+      System.out.println(pass + " Lift History:");
+      System.out.println("---------------");
+
+      while (rset.next()) {
+        String idno = rset.getString("Pass");
+        int liftid = rset.getInt("liftID");
+        String trail = rset.getString("Trail");
+        Date time = rset.getDate("dateTime");
+        System.out.println(
+            "Pass: " + idno + ", Lift ID: " + liftid + ", Name: " + trail + ", Time: " + time);
+      }
+
+      rset = stmt.executeQuery(query2);
+
+      System.out.println(pass + " Rental History:");
+      System.out.println("---------------");
+
+      while (rset.next()) {
+        String idno = rset.getString("Pass");
+        String eqtype = rset.getString("type");
+        Date rentalTime = rset.getDate("rentalTime");
+        int status = rset.getInt("returnStatus");
+        System.out.println(
+            "Pass: "
+                + idno
+                + ", Type: "
+                + eqtype
+                + ", Rental Time: "
+                + rentalTime
+                + ", Rental Status: "
+                + status);
+      }
+    } catch (SQLException e) { // Handle SQL exceptions
+      System.err.println("*** SQLException, could not execute query:  " + e.getMessage());
+      System.err.println("\tSQLState:  " + e.getSQLState());
+      System.err.println("\tErrorCode: " + e.getErrorCode());
+    }
   }
 
   /*---------------------------------------------------------------------
@@ -312,8 +336,83 @@ public class Queries {
     }
   }
 
+  /*---------------------------------------------------------------------
+  |  Method query4
+  |
+  |  Purpose:  This method displays properties that are profitable, unprofitable or
+  |            all properties via user input. It uses the property,shop and employee relations.
+  |
+  |  Pre-condition:  The property, shop and employee tables must exist and contain relevant data
+  |
+  |  Post-condition:  A list of properties and their income is displayed to meet user speciifcations
+  |
+  |  Parameters:  None.
+  |
+  |  Returns:  None.
+  *-------------------------------------------------------------------*/
   private void query4() {
-    // Implement the logic for query 4
+    HashMap<String, Float> map = new HashMap<>();
 
+    System.out.println("Select desired output: ");
+    System.out.println("(1) All properties monthly income ");
+    System.out.println("(2) Profitable property monthly income ");
+    System.out.println("(3) Unprofitable property monthly income ");
+    Scanner myin = new Scanner(System.in);
+    int q4Choice = myin.nextInt();
+
+    String propertySql =
+        "SELECT p.propertyID, p.name, SUM(s.income) AS monthly_income "
+            + "FROM group14.Shop s "
+            + "JOIN group14.Property p ON s.buildingID = p.propertyID "
+            + "GROUP BY p.propertyID, p.name "
+            + "ORDER BY p.propertyID;";
+
+    String employeeSql =
+        "SELECT p.propertyID, p.name, SUM(e.monthlySalary) AS monthly_cost "
+            + "FROM group14.Employee e "
+            + "JOIN group14.Property p ON e.propertyID = p.propertyID "
+            + "GROUP BY p.propertyID, p.name "
+            + "ORDER BY p.propertyID;";
+
+    try {
+      rset = stmt.executeQuery(propertySql);
+      while (rset.next()) {
+        map.put(rset.getString("name"), rset.getFloat("monthly_income"));
+      }
+      rset = stmt.executeQuery(employeeSql);
+      while (rset.next()) {
+        map.put(
+            rset.getString("name"),
+            map.get(rset.getString("name")) - rset.getFloat("monthly_cost"));
+      }
+    } catch (SQLException e) {
+      System.err.println("*** SQLException:  " + e.getMessage());
+      System.err.println("\tSQLState:  " + e.getSQLState());
+      System.err.println("\tErrorCode: " + e.getErrorCode());
+    }
+
+    if (q4Choice == 1) {
+      map.forEach(
+          (propertyName, netIncome) -> {
+            System.out.println("Property: " + propertyName + ", Net Income: $" + netIncome);
+          });
+    } else if (q4Choice == 2) {
+      map.forEach(
+          (propertyName, netIncome) -> {
+            if (netIncome > 0) {
+              System.out.println("Property: " + propertyName + ", Net Income: $" + netIncome);
+            }
+          });
+    } else if (q4Choice == 3) {
+      map.forEach(
+          (propertyName, netIncome) -> {
+            if (netIncome < 0) {
+              System.out.println("Property: " + propertyName + ", Net Income: $" + netIncome);
+            }
+          });
+    } else {
+      System.out.println(q4Choice + " Is not a valid choice. Please try again.");
+    }
+    myin.close();
   }
 }
