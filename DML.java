@@ -305,7 +305,88 @@ public class DML {
     }
   }
 
+  /*---------------------------------------------------------------------
+  |  Method lessons
+  |
+  |  Purpose:  Manages lesson purchases via interactive user input.
+  |           Allows users to view, add, update, delete, or record
+  |           usage of lesson purchase records stored in the database.
+  |
+  |  Pre-condition: Scanner and dbconn must be initialized and valid.
+  |
+  |  Post-condition: The LessonPurchase table may be modified based
+  |           on the user's selected operation.
+  |
+  |  Parameters: None
+  |
+  |  Returns: None
+  *-------------------------------------------------------------------*/
   private void lessons() {
-    // Implement the logic for Lessons table
+    try {
+      System.out.print("Would you like to view all lesson purchases? (yes/no): ");
+      String input = scanner.nextLine().trim().toLowerCase();
+
+      if (input.equals("yes") || input.equals("y")) {
+        LessonPurchaseHandler.displayAllPurchases(dbconn);
+      }
+
+      System.out.println("\nChoose an action:");
+      System.out.println("1. Add new lesson purchase");
+      System.out.println("2. Update remaining sessions");
+      System.out.println("3. Record a session usage");
+      System.out.println("4. Delete a lesson purchase");
+      System.out.print("Enter your choice: ");
+
+      int choice = scanner.nextInt();
+      scanner.nextLine(); // clear newline
+
+      if (choice == 1) { // Add new lesson purchase
+        System.out.print("Enter member ID: ");
+        int memberID = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Enter lesson ID: ");
+        int lessonID = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Enter number of sessions purchased: ");
+        int sessions = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Enter total price: ");
+        double price = scanner.nextDouble();
+        scanner.nextLine();
+
+        LessonPurchaseHandler.addPurchase(dbconn, memberID, lessonID, sessions, price);
+
+      } else if (choice == 2) { // Update remaining sessions
+        System.out.print("Enter order ID to update: ");
+        int orderID = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Enter new remaining sessions: ");
+        int remaining = scanner.nextInt();
+        scanner.nextLine();
+
+        LessonPurchaseHandler.updateRemainingSessions(dbconn, orderID, remaining);
+
+      } else if (choice == 3) { // Record session usage
+        System.out.print("Enter order ID to record session usage: ");
+        int orderID = scanner.nextInt();
+        scanner.nextLine();
+
+        LessonPurchaseHandler.recordSessionUsage(dbconn, orderID);
+
+      } else if (choice == 4) { // Delete lesson purchase
+        System.out.print("Enter order ID to delete: ");
+        int orderID = scanner.nextInt();
+        scanner.nextLine();
+
+        LessonPurchaseHandler.deletePurchase(dbconn, orderID);
+
+      } else {
+        System.out.println("Invalid choice.");
+      }
+
+    } catch (InputMismatchException e) {
+      System.out.println("Invalid input. Please enter the correct data type.");
+      scanner.nextLine(); // clear the buffer
+    }
   }
 }
