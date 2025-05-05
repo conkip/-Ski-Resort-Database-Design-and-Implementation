@@ -4,8 +4,7 @@ INSERT INTO group14.Trail VALUES (
     'Summit Station',
     'Pine Base',
     0,
-    'Intermediate',
-    'lift1'
+    'Intermediate'
 );
 
 INSERT INTO group14.Trail VALUES (
@@ -14,8 +13,7 @@ INSERT INTO group14.Trail VALUES (
     'Rocky Crest',
     'East Fork',
     1,
-    'Advanced',
-    'lift1'
+    'Advanced'
 );
 
 INSERT INTO group14.Trail VALUES (
@@ -24,8 +22,7 @@ INSERT INTO group14.Trail VALUES (
     'Beginner Ridge',
     'Meadow Drop',
     1,
-    'Beginner',
-    'lift3'
+    'Beginner'
 );
 
 INSERT INTO group14.Trail VALUES (
@@ -34,8 +31,7 @@ INSERT INTO group14.Trail VALUES (
     'North Rim',
     'Lower Canyon',
     1,
-    'Intermediate',
-    'lift3'
+    'Intermediate'
 );
 
 INSERT INTO group14.Trail VALUES (
@@ -44,8 +40,7 @@ INSERT INTO group14.Trail VALUES (
     'Midline Park',
     'Park Exit',
     1,
-    'Intermediate',
-    'lift2'
+    'Intermediate'
 );
 
 INSERT INTO group14.Trail VALUES (
@@ -54,6 +49,5 @@ INSERT INTO group14.Trail VALUES (
     'Crest Entry',
     'Valley View',
     1,
-    'Intermediate',
-    'lift2'
+    'Intermediate'
 );
