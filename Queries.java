@@ -133,9 +133,62 @@ public class Queries {
     }
   }
 
-  // Add your query methods here
+  /*---------------------------------------------------------------------
+  |  Method query1
+  |
+  |  Purpose:  For an inputed memberID, this method performs the sql query to list their
+  |            ID, name, and all the ski lessons they have purchased, including
+  |            the number of remaining sessions, instructor name, and scheduled time.
+  |
+  |  Pre-condition:  The LessonPurchase, LessonOffering, Employee, and Member tables 
+  |      must exist and be populated with valid data.
+  |
+  |  Post-condition:  A list of open, intermediate trails is printed
+  |      to the console, each showing its name, category, and associated
+  |      operational lifts.
+  |
+  |  Parameters:  None.
+  |
+  |  Returns:  None.
+  *-------------------------------------------------------------------*/
   private void query1() {
-    // Implement the logic for query 1
+    System.out.print("Please provide the memberID that");
+    System.out.println("you would like to see the lesson purchases for.\n");
+
+    String memberID = scanner.nextLine();
+
+    String sql =
+        "SELECT lp.remainingSessions, e.name AS instructor_name, lo.schedule AS scheduled_time\n"
+            + "FROM group14.LessonPurchase lp\n"
+            + "JOIN group14.lessonOffering lo ON lo.lessonID = lp.lessonID\n"
+            + "JOIN group14.Employee e ON lo.instructorID = e.employeeID\n"
+            + "JOIN group14.Member m ON m.memberID = lp.memberID\n"
+            + "WHERE m.memberID = \"" + memberID + "\"";
+
+    try {
+      // Execute the query
+      rset = stmt.executeQuery(sql);
+
+      // Process the result set
+      System.out.println("Lesson Purchases for member #" + memberID + ":");
+
+      // Check if the result set is empty
+      int count = 1;
+      while (rset.next()) {
+        int remainingSessions = rset.getInt("remainingSessions");
+        String instName = rset.getString("instructor_name");
+        String scheduledTime = rset.getString("scheduled_time");
+
+        String output = "Lesson #" +count + ": Remaining Sessions: " + remainingSessions
+                      + ", Instructor Name: " + instName + ", Scheduled Time: " + scheduledTime;
+        System.out.println(output);
+        count ++;
+      }
+    } catch (SQLException e) { // Handle SQL exceptions
+      System.err.println("*** SQLException:  " + e.getMessage());
+      System.err.println("\tSQLState:  " + e.getSQLState());
+      System.err.println("\tErrorCode: " + e.getErrorCode());
+    }
   }
 
   private void query2() {
