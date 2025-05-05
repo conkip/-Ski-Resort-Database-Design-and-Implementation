@@ -1,7 +1,7 @@
 CREATE TABLE group14.Property (
     propertyID INTEGER,
     name VARCHAR2(30),
-    adress VARCHAR2(30),
+    address VARCHAR2(30),
     property VARCHAR2(15),
     primary key (PropertyID));
 
@@ -114,6 +114,7 @@ CREATE TABLE group14.Employee (
     gender VARCHAR2(15),
     ethnicity VARCHAR2(15),
     dateBirth DATE,
+    propertyID INTEGER
     primary key (employeeID)
     );
 
