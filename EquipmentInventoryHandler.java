@@ -2,33 +2,34 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 
 /*+----------------------------------------------------------------------
 ||  Class EquipmentInventoryHandler
 ||
 ||         Author:  Group 14 – Connor, Luis, Mohammad, Nathan
 ||
-||        Purpose:  This class provides static methods to manage equipment
-||                  inventory records. This includes displaying all entries,
-||                  adding new equipment, updating existing entries, and
-||                  archiving old equipment.
+||        Purpose:  This static utility class manages the ski resort's
+||                  equipment inventory. It provides functions for:
+||                    - displaying all active (non-archived) equipment,
+||                    - adding new equipment entries,
+||                    - updating existing entries,
+||                    - and archiving old or retired equipment items.
+||
+||                  Equipment is uniquely identified by a randomly
+||                  generated equipmentID. Instead of deletion,
+||                  equipment is marked as archived to preserve history.
 ||
 ||  Inherits From:  None.
 ||
 ||     Interfaces:  None.
 ||
-|+-----------------------------------------------------------------------
-||
-||      Constants:  None.
-||
-|+-----------------------------------------------------------------------
-||
-||   Constructors:  None (static utility class)
+||   Constructors:  None (all methods are static).
 ||
 ||  Class Methods:
 ||       void displayAllEquipment(Connection dbconn)
-||       void addEquipment(Connection dbconn, String type, String size, int qty)
-||       void updateEquipment(Connection dbconn, int id, String type, String size, int qty)
+||       void addEquipment(Connection dbconn, String type, String size)
+||       void updateEquipment(Connection dbconn, int id, String type, String size)
 ||       void archiveEquipment(Connection dbconn, int id)
 ||
 ++-----------------------------------------------------------------------*/
@@ -37,48 +38,42 @@ public class EquipmentInventoryHandler {
   /*---------------------------------------------------------------------
   |  Method displaySummary
   |
-  |  Purpose: Displays a summary of all active (non-archived) equipment
-  |      in the Equipment table. The summary includes equipment ID, type,
-  |      size, and available quantity.
+  |  Purpose: Displays all non-archived (active) equipment records
+  |           in a formatted table, showing their ID, type, and size.
   |
   |  Pre-condition:
-  |      - Connection `dbconn` must be valid and open.
-  |      - Equipment table must exist and follow schema with an `archived`
-  |        column (1 = archived, 0 = active).
+  |     - Connection `dbconn` must be open and valid.
+  |     - The `group14.Equipment` table must exist.
   |
   |  Post-condition:
-  |      - Equipment summary is printed to the console.
-  |      - Archived equipment is excluded from the results.
+  |     - Active equipment entries are printed to standard output.
+  |     - Archived equipment entries are excluded.
   |
   |  Parameters:
-  |      dbconn -- (IN) active JDBC connection used to execute SQL queries.
+  |     dbconn -- A valid JDBC connection to the database.
   |
-  |  Returns: None
+  |  Returns: None.
   *-------------------------------------------------------------------*/
+
   public static void displaySummary(Connection dbconn) {
     String query =
-        "SELECT equipmentID, type, size, availableQty "
+        "SELECT equipmentID, type, size "
             + "FROM group14.Equipment "
             + "WHERE archived = 0 "
             + "ORDER BY equipmentID";
 
-    // Execute the query and process the results
     try (Statement stmt = dbconn.createStatement();
         ResultSet rset = stmt.executeQuery(query)) {
 
-      // Print the header
       System.out.println("\n--- Equipment Inventory ---");
-      System.out.printf("%-12s %-12s %-12s %-15s\n", "ID", "Type", "Size", "Available Qty");
+      System.out.printf("%-12s %-12s %-12s\n", "ID", "Type", "Size");
 
       while (rset.next()) {
-        // Retrieve data from the result set
         int id = rset.getInt("equipmentID");
         String type = rset.getString("type");
         String size = rset.getString("size");
-        int qty = rset.getInt("availableQty");
 
-        // Print each equipment entry
-        System.out.printf("%-12d %-12s %-12s %-15d\n", id, type, size, qty);
+        System.out.printf("%-12d %-12s %-12s\n", id, type, size);
       }
     } catch (SQLException e) {
       System.err.println("*** SQLException: " + e.getMessage());
@@ -90,40 +85,53 @@ public class EquipmentInventoryHandler {
   /*---------------------------------------------------------------------
   |  Method addEquipment
   |
-  |  Purpose: Adds a new equipment record to the Equipment table using
-  |      the provided type, size, and quantity. The new item is marked
-  |      as active (archived = 0) and a unique ID is auto-generated.
+  |  Purpose: Inserts a new piece of equipment into the Equipment table
+  |           with a unique randomly generated equipment ID. The item is
+  |           initially marked as active (not archived).
   |
   |  Pre-condition:
-  |      - Connection `dbconn` must be valid and open.
-  |      - Parameters `type`, `size` must be valid strings.
-  |      - Parameter `qty` must be a non-negative integer.
+  |     - `dbconn` must be a valid, open JDBC connection.
+  |     - `type` and `size` must be non-null and non-empty strings.
   |
   |  Post-condition:
-  |      - A new row is inserted into the Equipment table.
+  |     - A new row is inserted into `group14.Equipment` with archived = 0.
   |
   |  Parameters:
-  |      dbconn -- (IN) active JDBC connection.
-  |      type   -- (IN) type/category of the equipment.
-  |      size   -- (IN) size of the equipment.
-  |      qty    -- (IN) initial quantity available.
+  |     dbconn -- Active JDBC connection.
+  |     type   -- Type/category of the equipment (e.g., skis, boots).
+  |     size   -- Size descriptor (e.g., Small, 150cm, etc.).
   |
-  |  Returns: None
+  |  Returns: None.
   *-------------------------------------------------------------------*/
 
-  public static void addEquipment(Connection dbconn, String type, String size, int qty) {
+  public static void addEquipment(Connection dbconn, String type, String size) {
+    Random rand = new Random();
+    int newEquipmentID = 0;
+    boolean idIsUnique = false;
+
     try (Statement stmt = dbconn.createStatement()) {
-      String sql =
-          "INSERT INTO group14.Equipment (equipmentID, type, size, availableQty, archived) "
-              + "VALUES (group14.equipment_seq.NEXTVAL, '"
+      while (!idIsUnique) {
+        newEquipmentID = 10000 + rand.nextInt(90000);
+        String checkSQL =
+            "SELECT COUNT(*) FROM group14.Equipment WHERE equipmentID = " + newEquipmentID;
+        try (ResultSet rset = stmt.executeQuery(checkSQL)) {
+          if (rset.next() && rset.getInt(1) == 0) {
+            idIsUnique = true;
+          }
+        }
+      }
+
+      String insertSQL =
+          "INSERT INTO group14.Equipment (equipmentID, type, size, archived) "
+              + "VALUES ("
+              + newEquipmentID
+              + ", '"
               + type
               + "', '"
               + size
-              + "', "
-              + qty
-              + ", 0)";
-      stmt.executeUpdate(sql);
-      System.out.println("Equipment added successfully.");
+              + "', 0)";
+      stmt.executeUpdate(insertSQL);
+      System.out.println("Equipment added successfully with ID: " + newEquipmentID);
     } catch (SQLException e) {
       System.err.println("SQL Error: " + e.getMessage());
     }
@@ -132,37 +140,34 @@ public class EquipmentInventoryHandler {
   /*---------------------------------------------------------------------
   |  Method updateEquipment
   |
-  |  Purpose: Updates an existing equipment entry's type, size, and quantity,
-  |      provided that the item is currently active (not archived).
+  |  Purpose: Updates the type and size of an existing, non-archived
+  |           equipment entry identified by its ID.
   |
   |  Pre-condition:
-  |      - Connection `dbconn` must be valid and open.
-  |      - `id` must refer to a valid, active equipment item.
-  |      - `type` and `size` are valid strings, `qty` is non-negative.
+  |     - `dbconn` must be a valid JDBC connection.
+  |     - The equipment ID must refer to an existing, non-archived item.
   |
   |  Post-condition:
-  |      - If valid, the equipment record is updated in-place.
+  |     - The corresponding entry is updated if it is found and active.
   |
   |  Parameters:
-  |      dbconn -- (IN) active JDBC connection.
-  |      id     -- (IN) ID of the equipment to update.
-  |      type   -- (IN) new type/category.
-  |      size   -- (IN) new size.
-  |      qty    -- (IN) new available quantity.
+  |     dbconn -- Active JDBC connection.
+  |     id     -- ID of the equipment to update.
+  |     type   -- New type of the equipment.
+  |     size   -- New size of the equipment.
   |
-  |  Returns: None
+  |  Returns: None.
   *-------------------------------------------------------------------*/
 
-  public static void updateEquipment(Connection dbconn, int id, String type, String size, int qty) {
+  public static void updateEquipment(Connection dbconn, int id, String type, String size) {
     try (Statement stmt = dbconn.createStatement()) {
       String sql =
           "UPDATE group14.Equipment SET type = '"
               + type
               + "', size = '"
               + size
-              + "', availableQty = "
-              + qty
-              + " WHERE equipmentID = "
+              + "' "
+              + "WHERE equipmentID = "
               + id
               + " AND archived = 0";
       int updated = stmt.executeUpdate(sql);
@@ -179,27 +184,25 @@ public class EquipmentInventoryHandler {
   /*---------------------------------------------------------------------
   |  Method archiveEquipment
   |
-  |  Purpose: Archives an equipment item (sets archived = 1), provided that
-  |      it is not currently rented out. This preserves history without deletion.
+  |  Purpose: Flags an equipment record as archived (archived = 1)
+  |           if it is not currently rented out (i.e., no active rental).
   |
   |  Pre-condition:
-  |      - `dbconn` must be a valid JDBC connection.
-  |      - Equipment with given `id` must exist and not be currently rented
-  |        (i.e., has no active Rental entry with returnStatus = 0).
+  |     - `dbconn` must be valid and open.
+  |     - Equipment must not be actively rented (checked via Rental table).
   |
   |  Post-condition:
-  |      - The equipment is marked as archived (if allowed).
+  |     - The specified equipment entry is marked as archived if eligible.
   |
   |  Parameters:
-  |      dbconn -- (IN) active JDBC connection.
-  |      id     -- (IN) equipment ID to archive.
+  |     dbconn -- Active JDBC connection.
+  |     id     -- Equipment ID to archive.
   |
-  |  Returns: None
+  |  Returns: None.
   *-------------------------------------------------------------------*/
 
   public static void archiveEquipment(Connection dbconn, int id) {
     try (Statement stmt = dbconn.createStatement()) {
-      // Check if equipment is currently rented
       String checkSql =
           "SELECT COUNT(*) FROM group14.Rental WHERE equipmentID = " + id + " AND returnStatus = 0";
       try (ResultSet rset = stmt.executeQuery(checkSql)) {
@@ -211,7 +214,6 @@ public class EquipmentInventoryHandler {
 
       String sql = "UPDATE group14.Equipment SET archived = 1 WHERE equipmentID = " + id;
       int updated = stmt.executeUpdate(sql);
-
       if (updated > 0) {
         System.out.println("Equipment archived successfully.");
       } else {

@@ -182,46 +182,36 @@ public class DML {
         EquipmentInventoryHandler.displaySummary(dbconn);
       }
 
-      // Prompt for next action
       System.out.println("\nChoose an action:");
       System.out.println("1. Add new equipment");
       System.out.println("2. Update existing equipment");
-      System.out.println("3. Archive equipment");
+      System.out.println("3. Delete/Archive equipment");
       System.out.print("Enter your choice: ");
 
       int choice = scanner.nextInt();
-      scanner.nextLine(); // Clear newline
+      scanner.nextLine(); // clear newline
 
       if (choice == 1) {
         System.out.print("Enter equipment type: ");
         String type = scanner.nextLine();
         System.out.print("Enter equipment size: ");
         String size = scanner.nextLine();
-        System.out.print("Enter available quantity: ");
-        int qty = scanner.nextInt();
-        scanner.nextLine(); // Clear newline
-
-        EquipmentInventoryHandler.addEquipment(dbconn, type, size, qty);
+        EquipmentInventoryHandler.addEquipment(dbconn, type, size);
 
       } else if (choice == 2) {
         System.out.print("Enter equipment ID to update: ");
         int id = scanner.nextInt();
-        scanner.nextLine(); // Clear newline
+        scanner.nextLine();
         System.out.print("Enter new equipment type: ");
         String type = scanner.nextLine();
         System.out.print("Enter new equipment size: ");
         String size = scanner.nextLine();
-        System.out.print("Enter new available quantity: ");
-        int qty = scanner.nextInt();
-        scanner.nextLine(); // Clear newline
-
-        EquipmentInventoryHandler.updateEquipment(dbconn, id, type, size, qty);
+        EquipmentInventoryHandler.updateEquipment(dbconn, id, type, size);
 
       } else if (choice == 3) {
         System.out.print("Enter equipment ID to archive: ");
         int id = scanner.nextInt();
-        scanner.nextLine(); // Clear newline
-
+        scanner.nextLine();
         EquipmentInventoryHandler.archiveEquipment(dbconn, id);
 
       } else {
@@ -230,7 +220,7 @@ public class DML {
 
     } catch (InputMismatchException e) {
       System.out.println("Invalid input. Please enter a number.");
-      scanner.nextLine(); // Clear invalid input
+      scanner.nextLine();
     }
   }
 

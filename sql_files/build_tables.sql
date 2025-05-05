@@ -18,7 +18,6 @@ CREATE TABLE group14.Equipment (
     equipmentID INTEGER,
     type VARCHAR2(15),
     size VARCHAR2 (15),
-    availableQty INTEGER,
     archived NUMBER(1),
     primary key (equipmentID));
 
