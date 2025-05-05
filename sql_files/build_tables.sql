@@ -19,6 +19,7 @@ CREATE TABLE group14.Equipment (
     type VARCHAR2(15),
     size VARCHAR2 (15),
     availableQty INTEGER,
+    archived NUMBER(1),
     primary key (equipmentID));
 
 CREATE TABLE group14.Rental (
@@ -53,6 +54,11 @@ CREATE TABLE group14.Lift (
     primary key (liftID)
     );
 
+CREATE TABLE group14.trailLift (
+    liftID VARCHAR2(15),
+    trailName VARCHAR2(15)
+    );
+
 CREATE TABLE group14.Trail (
     name VARCHAR2(15),
     category VARCHAR2(15),
@@ -60,7 +66,6 @@ CREATE TABLE group14.Trail (
     end VARCHAR2(15),
     status NUMBER(1),
     difficulty VARCHAR2(15),
-    liftID VARCHAR2(15),
     primary key (name));
 
 CREATE TABLE group14.Member (
