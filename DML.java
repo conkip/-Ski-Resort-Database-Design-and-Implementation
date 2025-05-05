@@ -146,7 +146,33 @@ public class DML {
 
   // Add your DML methods here
   private void members() {
-    // Implement the logic for Members table
+    try {
+      System.out.print("Welcome, to the membership portal!");
+
+      System.out.println("\nChoose an action:");
+      System.out.println("1. Register a member");
+      System.out.println("2. Update existing member's contact information");
+      System.out.println("3. Delete a memebership");
+      System.out.print("Enter your choice: ");
+
+      int choice = scanner.nextInt();
+      scanner.nextLine(); // clear newline
+
+      if (choice == 1) {
+        //
+
+      } else if (choice == 2) {
+        //
+
+      } else if (choice == 3) {
+        //
+      } else {
+        System.out.println("Invalid choice.");
+      }
+    } catch (InputMismatchException e) {
+      System.out.println("Invalid input. Please enter a number.");
+      scanner.nextLine();
+    }
   }
 
   private void skiPasses() {
