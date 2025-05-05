@@ -2,3 +2,8 @@
 /CreateTables.class
 /Queries.class
 prog04.pdf
+.class
+*.class
+.project
+*.classpath
+.classpath

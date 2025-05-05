@@ -64,7 +64,6 @@ public class Queries {
   // Add your query methods here
   private void query1() {
     // Implement the logic for query 1
-
   }
 
   private void query2() {
@@ -74,6 +73,10 @@ public class Queries {
 
   private void query3() {
     // Implement the logic for query 3
+    String sql = 
+    "SELECT Trail.name, Trail.category, 
+
+
 
   }
 
