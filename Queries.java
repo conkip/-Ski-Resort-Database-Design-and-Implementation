@@ -190,10 +190,76 @@ public class Queries {
       System.err.println("\tErrorCode: " + e.getErrorCode());
     }
   }
-
+  
+  /*---------------------------------------------------------------------
+  |  Method query2
+  |
+  |  Purpose:  For a specified Pass ID, this method returns all of the Equipment rentals
+  |			   Associated with it, as well as the Lift uses associated as well.
+  |
+  |  Pre-condition:  The Pass, Lift, LiftLog, Rental, and Equipment tables 
+  |      must exist and be populated with valid data.
+  |
+  |  Post-condition:  This method prints the PassID, LiftID, Trail, and DateTime of the
+  |					  specified pass, as well as the PassID, Type, RentalTime, and RentalStatus of associated rentals
+  |
+  |  Parameters:  None.
+  |
+  |  Returns:  None.
+  *-------------------------------------------------------------------*/
   private void query2() {
-    // Implement the logic for query 2
-
+	  String pass = null;
+	  try (Scanner sc = new Scanner(System.in)) {
+		  System.out.print("Enter Pass ID to view information: ");
+		  System.out.println();
+		  pass = sc.nextLine();
+	  }
+	  
+	  String query1 = "Select passID as Pass, liftID, liftName as Trail, dateTime\n"
+		  		+ "From group14.Pass \n"
+		  		+ "JOIN group14.LiftLog USING (passID)\n"
+		  		+ "JOIN group14.Lift USING (liftID) \n"
+		  		+ "WHERE Pass = " + pass + ";\n";
+		  
+		  String query2 = "Select passID as Pass, type, rentalTime, returnStatus\n"
+		  		+ "From group14.Pass \n"
+		  		+ "JOIN group14.Rental USING (passID)\n"
+		  		+ "JOIN group14.Equipment USING (equipmentID) \n"
+		  		+ "WHERE Pass = " + pass + ";\n";
+		  
+		  try {
+			  rset = stmt.executeQuery(query1);
+			  
+			  System.out.println(pass + " Lift History:");
+			  System.out.println("---------------");
+			  
+			  while (rset.next()) {
+				  String idno = rset.getString("Pass");
+				  String liftid = rset.getInt("liftID");
+				  String trail = rset.getString("Trail");
+				  String time = rset.getDate("dateTime");
+				  System.out.println("Pass: " + idno + ", Lift ID: " + liftid + ", Name: " + trail ", Time: " + time);
+			  }
+			  
+			  rset = stmt.executeQuery(query2);
+			  
+			  System.out.println(pass + " Rental History:");
+			  System.out.println("---------------");
+			  
+			  while (rset.next()) {
+				  String idno = rset.getString("Pass");
+				  String eqtype = rset.getString("type");
+				  String rentalTime = rset.getDate("rentalTime");
+				  String status = rset.getInt("returnStatus");
+				  System.out.println("Pass: " + idno + ", Type: " + eqtype + ", Rental Time: " + rentalTime ", Rental Status: " + status);
+			  }
+		  }
+	  }
+	  catch (SQLException e) { // Handle SQL exceptions
+	      System.err.println("*** SQLException, could not execute query:  " + e.getMessage());
+	      System.err.println("\tSQLState:  " + e.getSQLState());
+	      System.err.println("\tErrorCode: " + e.getErrorCode());
+	  }
   }
 
   /*---------------------------------------------------------------------
