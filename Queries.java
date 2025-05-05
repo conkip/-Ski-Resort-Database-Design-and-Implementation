@@ -6,12 +6,11 @@ import java.util.Scanner;
 public class Queries {
 	public static void main(String[] args) {
 		final String oracleURL = "jdbc:oracle:thin:@aloe.cs.arizona.edu:1521:oracle";
-		System.out.println("1) - Members");
-		System.out.println("2) - Ski Passes");
-		System.out.println("3) - Equipment Inventory");
-		System.out.println("4) - Equipment Rentals");
-		System.out.println("5) - Lesson Purchases");
-		System.out.print("Choose which dataset to manage: ");
+		System.out.println("1) - For a given member, list all the ski lessons they have purchased, including\n	the number of remaining sessions, instructor name, and scheduled time.");
+		System.out.println("2) - For a given ski pass, list all lift rides and equipment rentals associated\n	with it, along with timestamps and return status.");
+		System.out.println("3) - List all open trails suitable for intermediate-level skiers, along with\n	their category and connected lifts that are currently operational.");
+		System.out.println("4) - ");
+		System.out.println("5) - Add/Delete/Update a dataset.");
 		try (Scanner sc = new Scanner(System.in)) {
 			System.out.print("Choose a query or \"Quit\" to exit: ");
 			while (true) {
