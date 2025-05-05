@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -224,8 +225,84 @@ public class DML {
     }
   }
 
+  /*---------------------------------------------------------------------
+  |  Method equipmentRentals
+  |
+  |  Purpose:  Manages equipment rental records. Allows the user to view
+  |           all current rentals, add a new rental record, update the
+  |           return status of a rental, or delete a rental entry if it
+  |           was created in error and not used.
+  |
+  |  Pre-condition:
+  |     - User must be connected to a valid database.
+  |     - The Rental, Equipment, and Pass tables must exist and be populated properly.
+  |
+  |  Post-condition:
+  |     - The Rental table may be modified depending on user input.
+  |
+  |  Parameters: None.
+  |
+  |  Returns: None.
+  *-------------------------------------------------------------------*/
   private void equipmentRentals() {
-    // Implement the logic for Equipment Rentals table
+    try {
+      System.out.print("Would you like to view all rental records? (yes/no): ");
+      String input = scanner.nextLine().trim().toLowerCase();
+
+      if (input.equals("yes") || input.equals("y")) {
+        RentalHandler.displayAllRentals(dbconn);
+      }
+
+      System.out.println("\nChoose an action:");
+      System.out.println("1. Add new rental");
+      System.out.println("2. Update return status");
+      System.out.println("3. Delete rental");
+      System.out.print("Enter your choice: ");
+
+      int choice = scanner.nextInt();
+      scanner.nextLine(); // Clear newline
+
+      if (choice == 1) {
+        System.out.print("Enter equipment ID: ");
+        int equipmentID = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Enter pass ID: ");
+        String passID = scanner.nextLine();
+        System.out.print("Enter rental start date (YYYY-MM-DD): ");
+        String rentalDate = scanner.nextLine();
+        System.out.print("Enter rental start time (HH:MM:SS): ");
+        String rentalTime = scanner.nextLine();
+        rentalTime = rentalDate + " " + rentalTime;
+        try {
+          Timestamp rentalTimestamp = Timestamp.valueOf(rentalTime);
+          RentalHandler.addRental(dbconn, equipmentID, passID, rentalTimestamp);
+        } catch (IllegalArgumentException e) {
+          System.out.println("Invalid date/time format. Please use YYYY-MM-DD HH:MM:SS.");
+          equipmentRentals(); // Retry
+        }
+
+      } else if (choice == 2) {
+        System.out.print("Enter equipment ID to update return status: ");
+        int rentalID = scanner.nextInt();
+        scanner.nextLine();
+
+        RentalHandler.updateReturnStatus(dbconn, rentalID);
+
+      } else if (choice == 3) {
+        System.out.print("Enter rental ID to delete: ");
+        int rentalID = scanner.nextInt();
+        scanner.nextLine();
+
+        RentalHandler.deleteRental(dbconn, rentalID);
+
+      } else {
+        System.out.println("Invalid choice.");
+      }
+
+    } catch (InputMismatchException e) {
+      System.out.println("Invalid input. Please enter a number.");
+      scanner.nextLine(); // Clear buffer
+    }
   }
 
   private void lessons() {

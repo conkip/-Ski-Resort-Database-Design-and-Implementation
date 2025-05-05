@@ -103,7 +103,6 @@ public class EquipmentInventoryHandler {
   |
   |  Returns: None.
   *-------------------------------------------------------------------*/
-
   public static void addEquipment(Connection dbconn, String type, String size) {
     Random rand = new Random();
     int newEquipmentID = 0;
@@ -158,7 +157,6 @@ public class EquipmentInventoryHandler {
   |
   |  Returns: None.
   *-------------------------------------------------------------------*/
-
   public static void updateEquipment(Connection dbconn, int id, String type, String size) {
     try (Statement stmt = dbconn.createStatement()) {
       String sql =
