@@ -156,8 +156,82 @@ public class DML {
     // Implement the logic for Ski Lessons table
   }
 
+  /*---------------------------------------------------------------------
+  |  Method equipmentInventory
+  |
+  |  Purpose:  Manages the Equipment inventory from a user interface
+  |      perspective. Prompts the user for whether they want to see a summary
+  |      of active equipment, then asks them to choose an action (add, update,
+  |      or archive). Delegates to EquipmentInventoryHandler for functionality.
+  |
+  |  Pre-condition:  Equipment table must exist. User must be connected and input must be valid.
+  |
+  |  Post-condition:  Depending on the user's choice, the equipment table may be
+  |      modified (new equipment added, existing updated, or archived).
+  |
+  |  Parameters:  None
+  |
+  |  Returns:  None
+  *-------------------------------------------------------------------*/
   private void equipmentInventory() {
-    // Implement the logic for Equipment Inventory table
+    try {
+      System.out.print("Would you like to view a summary of all active equipment? (yes/no): ");
+      String input = scanner.nextLine().trim().toLowerCase();
+
+      if (input.equals("yes") || input.equals("y")) {
+        EquipmentInventoryHandler.displaySummary(dbconn);
+      }
+
+      // Prompt for next action
+      System.out.println("\nChoose an action:");
+      System.out.println("1. Add new equipment");
+      System.out.println("2. Update existing equipment");
+      System.out.println("3. Archive equipment");
+      System.out.print("Enter your choice: ");
+
+      int choice = scanner.nextInt();
+      scanner.nextLine(); // Clear newline
+
+      if (choice == 1) {
+        System.out.print("Enter equipment type: ");
+        String type = scanner.nextLine();
+        System.out.print("Enter equipment size: ");
+        String size = scanner.nextLine();
+        System.out.print("Enter available quantity: ");
+        int qty = scanner.nextInt();
+        scanner.nextLine(); // Clear newline
+
+        EquipmentInventoryHandler.addEquipment(dbconn, type, size, qty);
+
+      } else if (choice == 2) {
+        System.out.print("Enter equipment ID to update: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Clear newline
+        System.out.print("Enter new equipment type: ");
+        String type = scanner.nextLine();
+        System.out.print("Enter new equipment size: ");
+        String size = scanner.nextLine();
+        System.out.print("Enter new available quantity: ");
+        int qty = scanner.nextInt();
+        scanner.nextLine(); // Clear newline
+
+        EquipmentInventoryHandler.updateEquipment(dbconn, id, type, size, qty);
+
+      } else if (choice == 3) {
+        System.out.print("Enter equipment ID to archive: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Clear newline
+
+        EquipmentInventoryHandler.archiveEquipment(dbconn, id);
+
+      } else {
+        System.out.println("Invalid choice.");
+      }
+
+    } catch (InputMismatchException e) {
+      System.out.println("Invalid input. Please enter a number.");
+      scanner.nextLine(); // Clear invalid input
+    }
   }
 
   private void equipmentRentals() {

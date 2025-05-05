@@ -1,130 +1,200 @@
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/*+----------------------------------------------------------------------
+||  Class Queries
+||
+||         Author:  Group 14 – Connor, Luis, Mohammad, Nathan
+||
+||        Purpose:  This class provides methods for executing SQL queries
+||                  against the ski resort Oracle database. It handles
+||                  user-driven query selection and processes results
+||                  for display through a command-line interface.
+||
+||  Inherits From:  None.
+||
+||     Interfaces:  None.
+||
+|+-----------------------------------------------------------------------
+||
+||      Constants:  None.
+||
+|+-----------------------------------------------------------------------
+||
+||   Constructors:
+||       Queries(Connection dbconn, Scanner scanner)
+||
+||  Class Methods:  None.
+||
+||  Inst. Methods:
+||       void performQueries()
+||       void query1()
+||       void query2()
+||       void query3()
+||       void query4()
+||
+++-----------------------------------------------------------------------*/
 public class Queries {
-	public static void main(String[] args) {
-		final String oracleURL = "jdbc:oracle:thin:@aloe.cs.arizona.edu:1521:oracle";
-		System.out.println("1) - For a given member, list all the ski lessons they have purchased, including\n	the number of remaining sessions, instructor name, and scheduled time.");
-		System.out.println("2) - For a given ski pass, list all lift rides and equipment rentals associated\n	with it, along with timestamps and return status.");
-		System.out.println("3) - List all open trails suitable for intermediate-level skiers, along with\n	their category and connected lifts that are currently operational.");
-		System.out.println("4) - ");
-		System.out.println("5) - Add/Delete/Update a dataset.");
-		try (Scanner sc = new Scanner(System.in)) {
-			System.out.print("Choose a query or \"Quit\" to exit: ");
-			while (true) {
-				String choice = sc.nextLine();
-				if (choice.equals("1")) {
-					query1(oracleURL);
-					return;
-				} else if (choice.equals("2")) {
-					query2(oracleURL);
-					return;
-				} else if (choice.equals("3")) {
-					query3(oracleURL);
-					return;
-				} else if (choice.equals("4")) {
-					query4(oracleURL);
-					return;
-				} else if (choice.equals("5")) {
-					query5(oracleURL);
-					return;
-				} else if (choice.equals("Quit")) {
-					return;
-				} else
-					System.out.println("Invalid Input Try Again.");
-			}
-		}
-	}
 
-	
-	private static void query1(String url) {
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+  private Connection dbconn;
+  private Statement stmt;
+  private ResultSet rset;
+  private Scanner scanner;
 
-		Connection dbconn = null;
+  /*---------------------------------------------------------------------
+  |  Constructor Queries
+  |
+  |  Purpose:  Initializes the Queries object with a JDBC database
+  |      connection and a Scanner object for user input. It attempts
+  |      to create a SQL statement object for executing queries.
+  |
+  |  Pre-condition:
+  |      - dbconn must be a valid, active JDBC Connection to the Oracle DB.
+  |      - scanner must be an initialized Scanner object.
+  |
+  |  Post-condition:
+  |      - The Queries object is ready to execute SQL SELECT queries.
+  |      - A Statement object is created; any SQLException will be printed.
+  |
+  |  Parameters:
+  |      dbconn -- (IN) a valid JDBC Connection to the Oracle database.
+  |      scanner -- (IN) a Scanner object for reading user input.
+  |
+  |  Returns:  None.
+  *-------------------------------------------------------------------*/
+  public Queries(Connection dbconn, Scanner scanner) {
+    this.dbconn = dbconn;
+    this.scanner = scanner;
+    try {
+      stmt = dbconn.createStatement();
+    } catch (SQLException e) {
+      System.err.println("*** SQLException:  " + "Could not create statement.");
+      System.err.println("\tMessage:   " + e.getMessage());
+      System.err.println("\tSQLState:  " + e.getSQLState());
+      System.err.println("\tErrorCode: " + e.getErrorCode());
+    }
+  }
 
-		try {
-			dbconn = DriverManager.getConnection(url, "", ""); // Your login
-		} catch (SQLException e) {
-			System.err.println("*** SQLException:  " + "Could not open JDBC connection.");
-			System.exit(-1);
-		}
-	}
+  /*---------------------------------------------------------------------
+  |  Method performQueries
+  |
+  |  Purpose:  Prompts the user to choose from a list of predefined
+  |      SQL queries and calls the appropriate method to execute the
+  |      query and display the results.
+  |
+  |  Pre-condition:  Scanner must be initialized and connected to input;
+  |      the Oracle connection must be valid and active.
+  |
+  |  Post-condition:  The selected query is executed and its output is
+  |      printed to the console. Invalid inputs are handled gracefully.
+  |
+  |  Parameters:  None.
+  |
+  |  Returns:  None.
+  *-------------------------------------------------------------------*/
+  public void performQueries() {
+    // This method will be used to call the query methods
+    // and display the results to the user.
+    System.out.println("Which query would you like to perform?");
+    System.out.println(
+        "1) - For a given member, list all the ski lessons they have purchased, including\n"
+            + "	the number of remaining sessions, instructor name, and scheduled time.");
+    System.out.println(
+        "2) - For a given ski pass, list all lift rides and equipment rentals associated\n"
+            + "	with it, along with timestamps and return status.");
+    System.out.println(
+        "3) - List all open trails suitable for intermediate-level skiers, along with\n"
+            + "	their category and connected lifts that are currently operational.");
+    System.out.println("4) - ");
 
-	
-	private static void query2(String url) {
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+    try {
+      int choice = scanner.nextInt();
+      scanner.nextLine(); // Consume the newline character
 
-		Connection dbconn = null;
+      if (choice == 1) {
+        query1();
+      } else if (choice == 2) {
+        query2();
+      } else if (choice == 3) {
+        query3();
+      } else if (choice == 4) {
+        query4();
+      } else {
+        System.out.println("Invalid choice. Please try again.");
+      }
+    } catch (InputMismatchException e) {
+      System.out.println("Invalid input. Please enter a number.");
+      scanner.nextLine(); // Clear the invalid input
+      performQueries(); // Call the method again to allow for retry
+    }
+  }
 
-		try {
-			dbconn = DriverManager.getConnection(url, "", ""); // Your login
-		} catch (SQLException e) {
-			System.err.println("*** SQLException:  " + "Could not open JDBC connection.");
-			System.exit(-1);
-		}
-	}
+  // Add your query methods here
+  private void query1() {
+    // Implement the logic for query 1
+  }
 
-	
-	private static void query3(String url) {
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+  private void query2() {
+    // Implement the logic for query 2
 
-		Connection dbconn = null;
+  }
 
-		try {
-			dbconn = DriverManager.getConnection(url, "", ""); // Your login
-		} catch (SQLException e) {
-			System.err.println("*** SQLException:  " + "Could not open JDBC connection.");
-			System.exit(-1);
-		}
-	}
+  /*---------------------------------------------------------------------
+  |  Method query3
+  |
+  |  Purpose:  This method retrieves and displays all trails that are
+  |      currently open and suitable for intermediate-level skiers,
+  |      along with their category and a comma-separated list of
+  |      operational lifts that are connected to each trail.
+  |
+  |  Pre-condition:  The Trails, TrailLift, and Lifts tables must exist
+  |      and be populated with valid data.
+  |
+  |  Post-condition:  A list of open, intermediate trails is printed
+  |      to the console, each showing its name, category, and associated
+  |      operational lifts.
+  |
+  |  Parameters:  None.
+  |
+  |  Returns:  None.
+  *-------------------------------------------------------------------*/
+  private void query3() {
+    String sql =
+        "SELECT t.name AS trail_name, t.category, "
+            + "LISTAGG(l.liftName, ', ') WITHIN GROUP (ORDER BY l.liftName) AS lifts "
+            + "FROM group14.Trail t "
+            + "JOIN group14.TrailLift tl ON t.name = tl.trail_name "
+            + "JOIN group14.Lift l ON tl.liftID = l.liftID "
+            + "WHERE t.difficulty = 'Intermediate' AND t.status = 1 AND l.status = 1 "
+            + "GROUP BY t.name, t.category";
 
-	
-	private static void query4(String url) {
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+    try {
+      // Execute the query
+      rset = stmt.executeQuery(sql);
 
-		Connection dbconn = null;
+      // Process the result set
+      System.out.println("Open Intermediate Trails and their connected lifts:");
 
-		try {
-			dbconn = DriverManager.getConnection(url, "", "");  // Your login
-		} catch (SQLException e) {
-			System.err.println("*** SQLException:  " + "Could not open JDBC connection.");
-			System.exit(-1);
-		}
-	}
+      // Check if the result set is empty
+      while (rset.next()) {
+        String trailName = rset.getString("trail_name");
+        String category = rset.getString("category");
+        String lifts = rset.getString("lifts");
+        System.out.println("Trail: " + trailName + ", Category: " + category + ", Lifts: " + lifts);
+      }
+    } catch (SQLException e) { // Handle SQL exceptions
+      System.err.println("*** SQLException:  " + e.getMessage());
+      System.err.println("\tSQLState:  " + e.getSQLState());
+      System.err.println("\tErrorCode: " + e.getErrorCode());
+    }
+  }
 
-	
-	private static void query5(String url) {
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+  private void query4() {
+    // Implement the logic for query 4
 
-		Connection dbconn = null;
-
-		try {
-			dbconn = DriverManager.getConnection(url, "", "");  // Your login
-		} catch (SQLException e) {
-			System.err.println("*** SQLException:  " + "Could not open JDBC connection.");
-			System.exit(-1);
-		}
-	}
+  }
 }
