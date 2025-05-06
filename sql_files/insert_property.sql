@@ -20,3 +20,4 @@ INSERT INTO group14.Property VALUES (
 );
 
 commit;
+exit;

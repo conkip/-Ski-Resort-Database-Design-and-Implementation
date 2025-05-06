@@ -137,3 +137,4 @@ CREATE TABLE group14.Updates (
 );
 
 commit;
+exit;

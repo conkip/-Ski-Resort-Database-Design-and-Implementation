@@ -53,3 +53,4 @@ INSERT INTO group14.Trail VALUES (
 );
 
 commit;
+exit;

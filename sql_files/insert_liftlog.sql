@@ -29,3 +29,4 @@ INSERT INTO group14.LiftLog VALUES (
 );
 
 commit;
+exit;

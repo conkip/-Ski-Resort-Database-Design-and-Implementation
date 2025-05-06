@@ -49,3 +49,4 @@ INSERT INTO group14.Member VALUES (
     'denisek@email.com');
 
 commit;
+exit;

@@ -29,3 +29,4 @@ INSERT INTO group14.TrailLift VALUES (
 );
 
 commit;
+exit;

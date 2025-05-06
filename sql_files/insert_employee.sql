@@ -83,3 +83,4 @@ INSERT INTO group14.Employee VALUES (
 );
 
 commit;
+exit;

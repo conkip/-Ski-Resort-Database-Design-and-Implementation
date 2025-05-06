@@ -26,3 +26,4 @@ INSERT INTO group14.Lift VALUES (
 );
 
 commit;
+exit;
