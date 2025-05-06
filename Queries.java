@@ -111,7 +111,8 @@ public class Queries {
     System.out.println(
         "3) - List all open trails suitable for intermediate-level skiers, along with\n"
             + "	their category and connected lifts that are currently operational.");
-    System.out.println("4) - ");
+    System.out.println("4) - Display current properties and their monthly income. Choose to\n"
+                      + "display all properties, profitable or unprofitable properties.");
 
     try {
       int choice = scanner.nextInt();
@@ -193,6 +194,10 @@ public class Queries {
         System.out.println(output);
         count++;
       }
+      if(count == 1) {
+        // no lessons found
+        System.out.println("No lesson purchases");
+      }
     } catch (SQLException e) { // Handle SQL exceptions
       System.err.println("*** SQLException:  " + e.getMessage());
       System.err.println("\tSQLState:  " + e.getSQLState());
@@ -218,10 +223,13 @@ public class Queries {
   *-------------------------------------------------------------------*/
   private void query2() {
     String pass = null;
-    try (Scanner sc = new Scanner(System.in)) {
+    try {
       System.out.print("Enter Pass ID to view information: ");
       System.out.println();
-      pass = sc.nextLine();
+      pass = scanner.nextLine();
+    } catch (Exception e) {
+      System.err.println("Error reading input: " + e.getMessage());
+      return;
     }
 
     String query1 =
@@ -229,18 +237,16 @@ public class Queries {
             + "From nathanlamont.Pass \n"
             + "JOIN nathanlamont.LiftLog USING (passID)\n"
             + "JOIN nathanlamont.Lift USING (liftID) \n"
-            + "WHERE Pass = "
-            + pass
-            + ";\n";
+            + "WHERE passID = '" + pass + "'";
+
 
     String query2 =
         "Select passID as Pass, equipmentType, rentalTime, returnStatus\n"
             + "From nathanlamont.Pass \n"
             + "JOIN nathanlamont.Rental USING (passID)\n"
             + "JOIN nathanlamont.Equipment USING (equipmentID) \n"
-            + "WHERE Pass = "
-            + pass
-            + ";\n";
+            + "WHERE passID = '" + pass + "'";
+
 
     try {
       rset = stmt.executeQuery(query1);
@@ -250,7 +256,7 @@ public class Queries {
 
       while (rset.next()) {
         String idno = rset.getString("Pass");
-        int liftid = rset.getInt("liftID");
+        String liftid = rset.getString("liftID");
         String trail = rset.getString("Trail");
         Date time = rset.getDate("dateTime");
         System.out.println(
@@ -308,7 +314,7 @@ public class Queries {
         "SELECT t.name AS trail_name, t.category, "
             + "LISTAGG(l.liftName, ', ') WITHIN GROUP (ORDER BY l.liftName) AS lifts "
             + "FROM nathanlamont.Trail t "
-            + "JOIN nathanlamont.TrailLift tl ON t.name = tl.trail_name "
+            + "JOIN nathanlamont.TrailLift tl ON t.name = tl.trailName "
             + "JOIN nathanlamont.Lift l ON tl.liftID = l.liftID "
             + "WHERE t.difficulty = 'Intermediate' AND t.status = 1 AND l.status = 1 "
             + "GROUP BY t.name, t.category";
@@ -350,27 +356,34 @@ public class Queries {
   *-------------------------------------------------------------------*/
   private void query4() {
     HashMap<String, Float> map = new HashMap<>();
-
+    
     System.out.println("Select desired output: ");
     System.out.println("(1) All properties monthly income ");
     System.out.println("(2) Profitable property monthly income ");
     System.out.println("(3) Unprofitable property monthly income ");
-    Scanner myin = new Scanner(System.in);
-    int q4Choice = myin.nextInt();
+    int q4Choice = -1;
+    try {
+      q4Choice = scanner.nextInt();
+      scanner.nextLine();
+    } catch (InputMismatchException e) {
+      System.out.println("Invalid input... ");
+      scanner.nextLine();
+      return;
+    }
 
     String propertySql =
         "SELECT p.propertyID, p.name, SUM(s.income) AS monthly_income "
             + "FROM nathanlamont.Shop s "
             + "JOIN nathanlamont.Property p ON s.buildingID = p.propertyID "
             + "GROUP BY p.propertyID, p.name "
-            + "ORDER BY p.propertyID;";
+            + "ORDER BY p.propertyID";
 
     String employeeSql =
         "SELECT p.propertyID, p.name, SUM(e.monthlySalary) AS monthly_cost "
             + "FROM nathanlamont.Employee e "
             + "JOIN nathanlamont.Property p ON e.propertyID = p.propertyID "
             + "GROUP BY p.propertyID, p.name "
-            + "ORDER BY p.propertyID;";
+            + "ORDER BY p.propertyID";
 
     try {
       rset = stmt.executeQuery(propertySql);
@@ -411,6 +424,5 @@ public class Queries {
     } else {
       System.out.println(q4Choice + " Is not a valid choice. Please try again.");
     }
-    myin.close();
   }
 }
