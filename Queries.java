@@ -111,8 +111,9 @@ public class Queries {
     System.out.println(
         "3) - List all open trails suitable for intermediate-level skiers, along with\n"
             + "	their category and connected lifts that are currently operational.");
-    System.out.println("4) - Display current properties and their monthly income. Choose to\n"
-                      + "display all properties, profitable or unprofitable properties.");
+    System.out.println(
+        "4) - Display current properties and their monthly income. Choose to\n"
+              + " display all properties, profitable or unprofitable properties.");
 
     try {
       int choice = scanner.nextInt();
