@@ -128,9 +128,9 @@ public class Main {
     }
 
     // We need an instance of the Queries and DML classes
-    this.scanner = new Scanner(System.in);
-    this.queries = new Queries(dbconn, scanner);
-    this.dml = new DML(dbconn, scanner);
+    scanner = new Scanner(System.in);
+    queries = new Queries(dbconn, scanner);
+    dml = new DML(dbconn, scanner);
 
     // ==========================================================
     // Main program loop
