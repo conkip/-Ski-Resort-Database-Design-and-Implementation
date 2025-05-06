@@ -67,7 +67,7 @@ CREATE TABLE nathanlamont.Lift (
 
 CREATE TABLE nathanlamont.LiftLog (
     passID varchar2(15),
-    liftID INTEGER,
+    liftID VARCHAR2(15),
     dateTime Date,
     foreign key (passID) references nathanlamont.Pass(passID),
     foreign key (liftID) references nathanlamont.Lift(liftID));
