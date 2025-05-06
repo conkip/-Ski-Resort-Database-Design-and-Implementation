@@ -1,6 +1,7 @@
 
 **Compilation and execution instructions**
 - compile program via "javac main.java"
+- compile handlers via "<handler compilation here>"
 - run via "java main <username> <password>"
 - proceed through text menu as desired
 
