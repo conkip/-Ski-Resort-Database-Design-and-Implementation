@@ -52,9 +52,9 @@ This design reflects a direct and normalized translation of the conceptual model
 \begin{itemize}
   \item \textbf{Property(} \underline{propertyID}, name, address, propertyType \textbf{)}
 
-  \item \textbf{Shop(} \underline{shopID}, name, type, buildingID\textsuperscript{FK}, income \textbf{)}
+  \item \textbf{Shop(} \underline{shopID}, name, shopType, buildingID\textsuperscript{FK}, income \textbf{)}
 
-  \item \textbf{Equipment(} \underline{equipmentID}, type, size, archived \textbf{)}
+  \item \textbf{Equipment(} \underline{equipmentID}, equipmentType, equipmentSize, archived \textbf{)}
 
   \item \textbf{Rental(} \underline{rentalID}, equipmentID\textsuperscript{FK}, passID\textsuperscript{FK}, rentalTime, returnStatus \textbf{)}
 
@@ -66,7 +66,7 @@ This design reflects a direct and normalized translation of the conceptual model
 
   \item \textbf{TrailLift(} liftID\textsuperscript{FK}, trailName\textsuperscript{FK} \textbf{)}
 
-  \item \textbf{Trail(} \underline{name}, category, start, end, status, difficulty \textbf{)}
+  \item \textbf{Trail(} \underline{name}, category, startPos, endPos, status, difficulty \textbf{)}
 
   \item \textbf{Member(} \underline{memberID}, name, phoneNumber, email, dateBirth, emergencyName, emergencyPhone, emergencyEmail \textbf{)}
 
@@ -74,7 +74,7 @@ This design reflects a direct and normalized translation of the conceptual model
 
   \item \textbf{LessonPurchase(} \underline{orderID}, memberID\textsuperscript{FK}, lessonID\textsuperscript{FK}, sessionsPurchased, remainingSessions, price \textbf{)}
 
-  \item \textbf{LessonOffering(} \underline{lessonID}, instructorID\textsuperscript{FK}, type, level, schedule \textbf{)}
+  \item \textbf{LessonOffering(} \underline{lessonID}, instructorID\textsuperscript{FK}, lessonType, skillLevel, schedule \textbf{)}
 
   \item \textbf{Employee(} \underline{employeeID}, name, phone, email, position, monthlySalary, startDate, gender, ethnicity, dateBirth, propertyID\textsuperscript{FK} \textbf{)}
 
