@@ -39,7 +39,7 @@ CREATE TABLE group14.Pass (
     numUses INTEGER,
     passType VARCHAR2(15),
     price NUMBER(10,2),
-    exprDATE DATE,
+    exprDate DATE,
     foreign key (memberID) references group14.Member(memberID),
     primary key (passID));
 

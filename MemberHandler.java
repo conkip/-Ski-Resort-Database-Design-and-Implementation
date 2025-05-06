@@ -25,10 +25,12 @@ import java.util.Random;
 ||  Class Methods:
 ||       void addMember(Connection dbconn, String name, String phoneNumber, String email,
 ||                      String dateBirth, String emergencyName, String emergencyPhone, 
-||                      String emergencyEmail) {
-||       void updateRemainingSessions(Connection dbconn, int orderID, int newRemaining)
-||       void deletePurchase(Connection dbconn, int orderID)
-||       void recordSessionUsage(Connection dbconn, int orderID)
+||                      String emergencyEmail)
+||
+||       void updateMember(Connection dbconn, int memberID, String phoneNumber, String email,
+||                      String emergencyName, String emergencyPhone, String emergencyEmail)
+||
+||       void deleteMember(Connection dbconn, int memberID)
 ++-----------------------------------------------------------------------*/
 public class MemberHandler {
 
@@ -138,26 +140,26 @@ public class MemberHandler {
       String sql = "";
       if(phoneNumber != null) {
         sql = 
-            "UPDATE group14.Member SET phoneNumber = "
-                + phoneNumber
+            "UPDATE group14.Member SET phoneNumber = '"
+                + phoneNumber + "'"
                 + " WHERE memberID = "
                 + memberID;
 
       } else if (email != null) {
         sql = 
-            "UPDATE group14.Member SET email = "
-                + email
+            "UPDATE group14.Member SET email = '"
+                + email + "'"
                 + " WHERE memberID = "
                 + memberID;
 
       } else { //if its the emergency contact being changed
         sql = 
-            "UPDATE group14.Member SET emergencyName = "
-                + emergencyName
-                + ", emergencyPhone = "
-                + emergencyPhone
-                + ", emergencyEmail = "
-                + emergencyEmail
+            "UPDATE group14.Member SET emergencyName = '"
+                + emergencyName + "'"
+                + ", emergencyPhone = '"
+                + emergencyPhone + "'"
+                + ", emergencyEmail = '"
+                + emergencyEmail + "'"
                 + " WHERE memberID = "
                 + memberID;
       }
@@ -167,6 +169,13 @@ public class MemberHandler {
       if (updated > 0) {
         // Print confirmation message
         System.out.println("Member #" + memberID + "updated successfully.");
+        
+        // Log update
+        String logSQL =
+            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+                + "'update', 'Member', " + memberID + ", SYSDATE)";
+        stmt.executeUpdate(logSQL);
+
       } else {
         System.out.println("Member ID not found.");
       }
@@ -210,47 +219,125 @@ public class MemberHandler {
       ResultSet rset = stmt.executeQuery(checkSQL);
       if (!rset.next()) {
         System.out.println("Member ID not found.");
+        return;
       }
 
-      // Check for active passes
+      // Check for active passes (compare expiration date to current date)
       checkSQL =
-          "SELECT exprDATE FROM"
-      ResultSet rset = stmt.executeQuery("SELECT expiration_date FROM your_table");
+          "SELECT exprDate FROM group14.Pass WHERE memberID = " + memberID;
+      rset = stmt.executeQuery(checkSQL);
 
-      LocalDate today = LocalDate.now();
+      LocalDate curDate = LocalDate.now();
 
       while (rset.next()) {
-          // Get expiration_date from ResultSet as java.sql.Date and convert to LocalDate
-          Date sqlDate = rset.getDate("expiration_date");
-          if (sqlDate != null) {
-              LocalDate expirationDate = sqlDate.toLocalDate();
+          Date sqlDate = rset.getDate("exprDate");
+          LocalDate exprDate = sqlDate.toLocalDate();
 
-              // Compare to today's date
-              if (expirationDate.isBefore(today)) {
-                  System.out.println("Expired on: " + expirationDate);
-              } else {
-                  System.out.println("Still valid until: " + expirationDate);
-              }
+          if (!exprDate.isBefore(curDate)) {
+            String message = "Member #" + memberID + " still has an active pass."
+                          + " Please wait for the pass to expire or cancel it"
+                          + " before deleting the membership.";
+              System.out.println(message);
+              return;
+          }
+      }
+
+      // Check for open rental records
+      checkSQL =
+          "SELECT returnStatus \n"
+            + "FROM group14.Pass p lp \n"
+            + "JOIN group14.Rental r ON p.passID = lp.passID \n"
+            + "WHERE p.memberID = " + memberID;
+
+      rset = stmt.executeQuery(checkSQL);
+
+      while (rset.next()) {
+          int returnStatus = rset.getInt("returnStatus");
+          if(returnStatus == 0) {
+            String message = "Member #" + memberID + " has open rental records."
+                          + " Please return all equipment before deleting the membership.";
+            System.out.println(message);
+          }
+      }
+
+      // Check for unused lesson sessions
+      checkSQL = 
+            "SELECT remainingSessions \n"
+              + "FROM LessonPurchase \n"
+              + "WHERE p.memberID = " + memberID;
+      
+              rset = stmt.executeQuery(checkSQL);
+
+      while (rset.next()) {
+          int remainingSessions = rset.getInt("remainingSessions");
+          if(remainingSessions > 0) {
+            String message = "Member #" + memberID + " has remaining lesson sessions left."
+                          + " Please finish or cancel all lessons before deleting the membership.";
+            System.out.println(message);
           }
       }
 
 
+      // delete member from the table
+      String deleteSQL = "DELETE FROM group14.Member WHERE memberID = " + memberID;
+      stmt.executeUpdate(deleteSQL);
 
+      // delete ski pass data, lift logs, and rental history
 
+      // delete all stuff connected to the passes
       checkSQL =
-          "SELECT * FROM group14.Pass WHERE memberID = " + memberID ;
-      // Get the number of remaining sessions
-      // Check if remaining sessions are equal to purchased sessions
-      // If so, delete the record
-      int remaining = rset.getInt("remainingSessions");
-      if (remaining == rset.getInt("sessionsPurchased")) {
-        String deleteSQL = "DELETE FROM group14.LessonPurchase WHERE orderID = " + orderID;
-        stmt.executeUpdate(deleteSQL);
-        System.out.println("Lesson purchase deleted successfully.");
-      } else {
-        // Print message if sessions have been used
-        System.out.println("Cannot delete. Some sessions have already been used.");
+          "SELECT passID \n"
+            + "FROM group14.Pass p \n"
+            + "WHERE p.memberID = " + memberID;
+
+      rset = stmt.executeQuery(checkSQL);
+
+      while (rset.next()) {
+          int passID = rset.getInt("passID");
+          
+          // delete rental history
+          deleteSQL = "DELETE FROM group14.Rental WHERE passID = " + passID;
+          stmt.executeUpdate(deleteSQL);
+
+          // delete lift logs
+          deleteSQL = "DELETE FROM group14.LiftLog WHERE passID = " + passID;
+          stmt.executeUpdate(deleteSQL);
       }
+
+      // delete the pass itslef
+      deleteSQL = "DELETE FROM group14.Pass WHERE memberID = " + memberID;
+      stmt.executeUpdate(deleteSQL);
+
+
+      // delete lesson transactions
+      checkSQL =
+          "SELECT orderID \n"
+            + "FROM group14.LessonPurchase lp\n"
+            + "WHERE lp.memberID = " + memberID;
+
+      rset = stmt.executeQuery(checkSQL);
+
+      while (rset.next()) {
+          int passID = rset.getInt("orderID");
+          
+          // delete lesson logs
+          deleteSQL = "DELETE FROM group14.LessonLog WHERE orderID = " + orderID;
+          stmt.executeUpdate(deleteSQL);
+      }
+
+      // delete the lesson purchase
+      deleteSQL = "DELETE FROM group14.LessonPurchase WHERE memberID = " + memberID;
+      stmt.executeUpdate(deleteSQL);
+
+
+      System.out.println("Member and all related records deleted successfully.");
+
+      // Log update
+      String logSQL =
+          "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+              + "'delete', 'Member', " + memberID + ", SYSDATE)";
+      stmt.executeUpdate(logSQL);
+
     } catch (SQLException e) {
       System.err.println("SQL Error: " + e.getMessage());
     }

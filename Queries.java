@@ -160,14 +160,12 @@ public class Queries {
     String memberID = scanner.nextLine();
 
     String sql =
-        "SELECT lp.remainingSessions, e.name AS instructor_name, lo.schedule AS scheduled_time\n"
-            + "FROM group14.LessonPurchase lp\n"
-            + "JOIN group14.lessonOffering lo ON lo.lessonID = lp.lessonID\n"
-            + "JOIN group14.Employee e ON lo.instructorID = e.employeeID\n"
-            + "JOIN group14.Member m ON m.memberID = lp.memberID\n"
-            + "WHERE m.memberID = \""
-            + memberID
-            + "\"";
+        "SELECT lp.remainingSessions, e.name AS instructor_name, lo.schedule AS scheduled_time \n"
+            + "FROM group14.LessonPurchase lp \n"
+            + "JOIN group14.lessonOffering lo ON lo.lessonID = lp.lessonID \n"
+            + "JOIN group14.Employee e ON lo.instructorID = e.employeeID \n"
+            + "JOIN group14.Member m ON m.memberID = lp.memberID \n"
+            + "WHERE m.memberID = '" + memberID + "'";
 
     try {
       // Execute the query
