@@ -318,7 +318,7 @@ public class MemberHandler {
       rset = stmt.executeQuery(checkSQL);
 
       while (rset.next()) {
-          int passID = rset.getInt("orderID");
+          int orderID = rset.getInt("orderID");
           
           // delete lesson logs
           deleteSQL = "DELETE FROM group14.LessonLog WHERE orderID = " + orderID;
