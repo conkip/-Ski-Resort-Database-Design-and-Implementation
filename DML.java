@@ -3,8 +3,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.Date;
 
 /*+----------------------------------------------------------------------
 ||  Class DML
@@ -151,7 +153,7 @@ public class DML {
 
       System.out.println("\nChoose an action:");
       System.out.println("1. Register a member");
-      System.out.println("2. Update existing member's contact information");
+      System.out.println("2. Update existing member's information");
       System.out.println("3. Delete a memebership");
       System.out.print("Enter your choice: ");
 
@@ -159,15 +161,81 @@ public class DML {
       scanner.nextLine(); // clear newline
 
       if (choice == 1) {
-        //
+        System.out.println("Enter your name (first and last):");
+        String name = scanner.nextLine();
+        System.out.println("Enter your phone number (XXX-XXXX):");
+        String phoneNumber = scanner.nextLine();
+        System.out.println("Enter your email:");
+        String email = scanner.nextLine();
+        System.out.println("Enter your DOB (YYYY-MM-DD)");
+        String dob = scanner.nextLine();
+        System.out.println("Enter your emergency contact's name (first and last):");
+        String emergencyName = scanner.nextLine();
+        System.out.println("Enter your emergency contact's phone number (XXX-XXXX):");
+        String emergencyPhone = scanner.nextLine();
+        System.out.println("Enter your emergency contact's email:");
+        String emergencyEmail = scanner.nextLine();
+
+        try {
+          LocalDate dateBirth = LocalDate.parse(dob);
+
+          MemberHandler.addMember(dbconn, name, phoneNumber, email, dateBirth, 
+                  emergencyName, emergencyPhone, emergencyEmail);
+        } catch (IllegalArgumentException e) {
+          System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+          members(); // Retry
+        }
 
       } else if (choice == 2) {
-        //
+        System.out.println("Enter the member ID of the membership you would like to update:");
+        int memberID = scanner.nextInt();
+
+        System.out.println("\nWhat would you like to update:");
+        System.out.println("1. Phone Number");
+        System.out.println("2. Email");
+        System.out.println("3. Emergency Contact");
+        System.out.print("Enter your choice:");
+
+        choice = scanner.nextInt();
+        scanner.nextLine(); // clear newline
+
+        if (choice == 1) {
+          System.out.println("Enter new phone number:");
+          String newPhone = scanner.nextLine();
+          
+          MemberHandler.updateMember(dbconn, memberID, newPhone, null, 
+                null, null, null);
+        } else if(choice == 2) {
+          System.out.println("Enter new email:");
+          String newEmail = scanner.nextLine();
+          
+          MemberHandler.updateMember(dbconn, memberID, null, newEmail, 
+                null, null, null);
+        } else if(choice == 3) {
+          System.out.println("Enter your emergency contact's name (first and last):");
+          String newEmergencyName = scanner.nextLine();
+
+          System.out.println("Enter your emergency contact's phone number:");
+          String newEmergencyPhone = scanner.nextLine();
+
+          System.out.println("Enter your emergency contact's email:");
+          String newEmergencyEmail = scanner.nextLine();
+          
+          MemberHandler.updateMember(dbconn, memberID, null, null, 
+                newEmergencyName, newEmergencyPhone, newEmergencyEmail);
+        } else {
+          System.out.println("Invalid choice.");
+          members();
+        }
 
       } else if (choice == 3) {
-        //
+        System.out.println("Enter the memberID for the account you would like to delete:");
+        String memberID = scanner.nextLine();
+
+        MemberHandler.deleteMember(dbconn, memberID);
       } else {
         System.out.println("Invalid choice.");
+        members();
       }
     } catch (InputMismatchException e) {
       System.out.println("Invalid input. Please enter a number.");

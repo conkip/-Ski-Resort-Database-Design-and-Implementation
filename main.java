@@ -58,7 +58,7 @@ import java.util.*;
 ||  Inst. Methods:  None.
 ||
 ++-----------------------------------------------------------------------*/
-public class main {
+public class Main {
   private static final boolean DEBUG = true;
   private static Queries queries;
   private static DML dml;
