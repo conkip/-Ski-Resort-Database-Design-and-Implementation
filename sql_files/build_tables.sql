@@ -9,7 +9,7 @@ CREATE TABLE nathanlamont.Property (
 CREATE TABLE nathanlamont.Shop (
     shopID INTEGER,
     name VARCHAR2(30),
-    shopType VARCHAR2(15),
+    shopType VARCHAR2(20),
     buildingID INTEGER,
     income NUMBER(12, 2),
     foreign key (buildingID) references nathanlamont.Property(propertyID),
@@ -31,7 +31,7 @@ CREATE TABLE nathanlamont.Member (
     dateBirth DATE,
     emergencyName VARCHAR2(15),
     emergencyPhone VARCHAR2(15),
-    emergencyEmail VARCHAR2(15),
+    emergencyEmail VARCHAR2(25),
     primary key (memberID)
     );
 
@@ -73,7 +73,7 @@ CREATE TABLE nathanlamont.LiftLog (
     foreign key (liftID) references nathanlamont.Lift(liftID));
 
 CREATE TABLE nathanlamont.Trail (
-    name VARCHAR2(15),
+    name VARCHAR2(20),
     category VARCHAR2(15),
     startPos VARCHAR2(15),
     endPos VARCHAR2(15),
@@ -83,7 +83,7 @@ CREATE TABLE nathanlamont.Trail (
 
 CREATE TABLE nathanlamont.TrailLift (
     liftID VARCHAR2(15),
-    trailName VARCHAR2(15),
+    trailName VARCHAR2(20),
     foreign key (trailName) references nathanlamont.Trail(name),
     foreign key (liftID) references nathanlamont.Lift(liftID)
     );
