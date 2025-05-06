@@ -4,3 +4,4 @@ INSERT INTO group14.LessonLog VALUES (
 );
 
 commit;
+exit;

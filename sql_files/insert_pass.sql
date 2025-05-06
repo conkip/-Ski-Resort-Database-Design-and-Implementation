@@ -44,3 +44,4 @@ INSERT INTO group14.Pass VALUES (
 );
 
 commit;
+exit;

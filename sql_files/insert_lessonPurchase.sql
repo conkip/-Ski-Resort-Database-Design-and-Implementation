@@ -26,3 +26,4 @@ INSERT INTO group14.LessonPurchase VALUES (
 );
 
 commit;
+exit;

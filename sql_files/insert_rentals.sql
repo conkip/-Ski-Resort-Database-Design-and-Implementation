@@ -39,3 +39,4 @@ INSERT INTO group14.Rental VALUES (
 );
 
 commit;
+exit;

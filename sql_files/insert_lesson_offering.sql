@@ -15,3 +15,4 @@ INSERT INTO group14.LessonOffering VALUES (
 );
 
 commit;
+exit;

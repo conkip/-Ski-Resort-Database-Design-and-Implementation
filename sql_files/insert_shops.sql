@@ -71,3 +71,4 @@ INSERT INTO group14.Shop VALUES (
 );
 
 commit;
+exit;
