@@ -42,7 +42,7 @@ INSERT INTO nathanlamont.LiftLog VALUES (
 
 INSERT INTO nathanlamont.LiftLog VALUES (
     'P2',
-    'lift4',
+    'lift3',
     TO_DATE('2025-04-16 13:30:00', 'YYYY-MM-DD HH24:MI:SS')
 );
 
