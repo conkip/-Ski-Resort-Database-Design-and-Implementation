@@ -42,4 +42,6 @@ INSERT INTO group14.Pass VALUES (
     49.99,
     TO_DATE('2025-04-30', 'YYYY-MM-DD')
 );
+
 commit;
+exit;

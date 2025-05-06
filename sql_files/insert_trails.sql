@@ -51,3 +51,6 @@ INSERT INTO group14.Trail VALUES (
     1,
     'Intermediate'
 );
+
+commit;
+exit;

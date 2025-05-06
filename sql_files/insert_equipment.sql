@@ -40,3 +40,5 @@ INSERT INTO group14.Equipment VALUES (
     1
 );
 
+commit;
+exit;

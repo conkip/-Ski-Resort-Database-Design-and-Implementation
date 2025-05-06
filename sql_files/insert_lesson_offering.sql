@@ -13,3 +13,6 @@ INSERT INTO group14.LessonOffering VALUES (
     'Intermediate',
     'Fri-Sat 14:00'
 );
+
+commit;
+exit;

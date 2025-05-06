@@ -24,6 +24,9 @@ INSERT INTO group14.LiftLog VALUES (
 
 INSERT INTO group14.LiftLog VALUES (
     'P5',
-    'lift3,
+    'lift3',
     TO_DATE('2025-04-15 11:45:00', 'YYYY-MM-DD HH24:MI:SS')
 );
+
+commit;
+exit;

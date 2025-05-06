@@ -57,7 +57,7 @@ INSERT INTO group14.Shop VALUES (
 INSERT INTO group14.Shop VALUES (
     108,
     'Snow Snacks',
-    'Restaraunt',
+    'Restaurant',
     3,
     25123.22
 );
@@ -69,3 +69,6 @@ INSERT INTO group14.Shop VALUES (
     3,
     4665.21
 );
+
+commit;
+exit;

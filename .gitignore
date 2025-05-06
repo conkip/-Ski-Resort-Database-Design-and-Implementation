@@ -7,3 +7,6 @@ prog04.pdf
 .project
 *.classpath
 .classpath
+
+.DS_Store
+*.DS_Store

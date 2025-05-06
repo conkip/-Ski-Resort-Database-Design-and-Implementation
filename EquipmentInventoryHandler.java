@@ -170,6 +170,15 @@ public class EquipmentInventoryHandler {
               + " AND archived = 0";
       int updated = stmt.executeUpdate(sql);
       if (updated > 0) {
+        // Log the update to Updates table
+        String logSQL =
+            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+                + "'update', 'Equipment', '"
+                + id
+                + "', SYSDATE)";
+        stmt.executeUpdate(logSQL);
+
+        // print the update
         System.out.println("Equipment updated successfully.");
       } else {
         System.out.println("No active equipment found with the given ID.");
@@ -213,6 +222,15 @@ public class EquipmentInventoryHandler {
       String sql = "UPDATE group14.Equipment SET archived = 1 WHERE equipmentID = " + id;
       int updated = stmt.executeUpdate(sql);
       if (updated > 0) {
+        // Log the archival (treated as update)
+        String logSQL =
+            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+                + "'update', 'Equipment', '"
+                + id
+                + "', SYSDATE)";
+        stmt.executeUpdate(logSQL);
+
+        // print the update
         System.out.println("Equipment archived successfully.");
       } else {
         System.out.println("No equipment found with the given ID.");
