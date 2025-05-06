@@ -9,7 +9,7 @@
 
 **Workload Distribution**
 - Nathan Lamont:
-    Query 4, writeups i,ii,iv, table creation, table insertions, data creation
+    Query 4, writeups i,ii,iv, table creation, table insertions, data creation, readmes, testing for all queries and bug + error fixing for queries
 - Connor Kippes:
 
 - MohannadHossein Rezaei:
