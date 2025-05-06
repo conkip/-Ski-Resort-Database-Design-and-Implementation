@@ -104,16 +104,16 @@ public class Queries {
     System.out.println("Which query would you like to perform?");
     System.out.println(
         "1) - For a given member, list all the ski lessons they have purchased, including\n"
-            + "	the number of remaining sessions, instructor name, and scheduled time.");
+            + "\tthe number of remaining sessions, instructor name, and scheduled time.");
     System.out.println(
         "2) - For a given ski pass, list all lift rides and equipment rentals associated\n"
-            + "	with it, along with timestamps and return status.");
+            + "\twith it, along with timestamps and return status.");
     System.out.println(
         "3) - List all open trails suitable for intermediate-level skiers, along with\n"
-            + "	their category and connected lifts that are currently operational.");
+            + "\ttheir category and connected lifts that are currently operational.");
     System.out.println(
         "4) - Display current properties and their monthly income. Choose to\n"
-              + " display all properties, profitable or unprofitable properties.");
+              + "\tdisplay all properties, profitable or unprofitable properties.");
 
     try {
       int choice = scanner.nextInt();
