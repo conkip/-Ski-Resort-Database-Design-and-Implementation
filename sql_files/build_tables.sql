@@ -139,4 +139,23 @@ CREATE TABLE group14.Updates (
 );
 
 commit;
+
+GRANT ALL ON group14.Property TO PUBLIC;
+GRANT ALL ON group14.Shop TO PUBLIC;
+GRANT ALL ON group14.Equipment TO PUBLIC;
+GRANT ALL ON group14.Rental TO PUBLIC;
+GRANT ALL ON group14.Pass TO PUBLIC;
+GRANT ALL ON group14.LiftLog TO PUBLIC;
+GRANT ALL ON group14.Lift TO PUBLIC;
+GRANT ALL ON group14.TrailLift TO PUBLIC;
+GRANT ALL ON group14.Trail TO PUBLIC;
+GRANT ALL ON group14.Member TO PUBLIC;
+GRANT ALL ON group14.LessonLog TO PUBLIC;
+GRANT ALL ON group14.LessonPurchase TO PUBLIC;
+GRANT ALL ON group14.LessonOffering TO PUBLIC;
+GRANT ALL ON group14.Employee TO PUBLIC;
+GRANT ALL ON group14.Updates TO PUBLIC;
+
+commit;
+
 exit;

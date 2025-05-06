@@ -32,12 +32,62 @@
 \tableofcontents
 
 \section{Conceptual database design}
-
+To design the conceptual schema of the database we first did a detailed walk through fot the program specifications to record what tables are going to be needed to store data. 
+The ER diagram we made captures the ski resorts day to day operations tracking members and their activites as well as the resorts staff and income via its services. Attributes
+are constrained via sql datatypes.
 \section{Logical database design}
+
+Below is the final relational schema derived from the E--R diagram. Each table lists its attributes, primary keys (\textbf{PK}), and foreign keys (\textbf{FK}) explicitly. 
+This design reflects a direct and normalized translation of the conceptual model into the relational model used in Oracle SQL.
+
+\begin{itemize}
+  \item \textbf{Property(} \underline{propertyID}, name, address, propertyType \textbf{)}
+
+  \item \textbf{Shop(} \underline{shopID}, name, type, buildingID\textsuperscript{FK}, income \textbf{)}
+
+  \item \textbf{Equipment(} \underline{equipmentID}, type, size, archived \textbf{)}
+
+  \item \textbf{Rental(} \underline{rentalID}, equipmentID\textsuperscript{FK}, passID\textsuperscript{FK}, rentalTime, returnStatus \textbf{)}
+
+  \item \textbf{Pass(} \underline{passID}, memberID\textsuperscript{FK}, numUses, passType, price, exprDATE \textbf{)}
+
+  \item \textbf{LiftLog(} passID\textsuperscript{FK}, liftID\textsuperscript{FK}, dateTime \textbf{)}
+
+  \item \textbf{Lift(} \underline{liftID}, liftName, openTime, closeTime, abilityLevel, status \textbf{)}
+
+  \item \textbf{TrailLift(} liftID\textsuperscript{FK}, trailName\textsuperscript{FK} \textbf{)}
+
+  \item \textbf{Trail(} \underline{name}, category, start, end, status, difficulty \textbf{)}
+
+  \item \textbf{Member(} \underline{memberID}, name, phoneNumber, email, dateBirth, emergencyName, emergencyPhone, emergencyEmail \textbf{)}
+
+  \item \textbf{LessonLog(} orderID\textsuperscript{FK}, dateTime \textbf{)}
+
+  \item \textbf{LessonPurchase(} \underline{orderID}, memberID\textsuperscript{FK}, lessonID\textsuperscript{FK}, sessionsPurchased, remainingSessions, price \textbf{)}
+
+  \item \textbf{LessonOffering(} \underline{lessonID}, instructorID\textsuperscript{FK}, type, level, schedule \textbf{)}
+
+  \item \textbf{Employee(} \underline{employeeID}, name, phone, email, position, monthlySalary, startDate, gender, ethnicity, dateBirth, propertyID\textsuperscript{FK} \textbf{)}
+
+  \item \textbf{Updates(} updateType, tableChanged, changeID, dateTime \textbf{)}
+\end{itemize}
 
 \section{Normalization analysis}
 
 \section{Query description}
+\subsection{Custom Query: Monthly Income Summary}
 
+\textbf{Query Goal:} Calculate the gross monthly income of the resort by subtracting total employee salaries from the sum of all incomes recorded across the properties.
+
+\textbf{Motivation:} This query helps stakeholders monitor the profitability of the resort’s operations, combining staff payroll and property performance in a single monthly snapshot.
+
+\textbf{Relations Involved:}
+\begin{itemize}
+  \item \texttt{Property}
+  \item \texttt{Shop}
+  \item \texttt{Employee}
+\end{itemize}
+
+\textbf{Query Details:} For each month, aggregate total income from properties (e.g., gift shops, rental centers), subtract the sum of salaries of all employees, and report the net income. This could be extended to include breakdowns by property type or department.
 
 \end{document}
