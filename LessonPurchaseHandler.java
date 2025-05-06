@@ -236,6 +236,13 @@ public class LessonPurchaseHandler {
       // Execute the update
       int updated = stmt.executeUpdate(sql);
       if (updated > 0) {
+        // Log update
+        String logSQL =
+            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+                + "'update', 'LessonPurchase', '"
+                + orderID
+                + "', SYSDATE)";
+        stmt.executeUpdate(logSQL);
         // Print confirmation message
         System.out.println("Remaining sessions updated successfully.");
       } else {
@@ -276,10 +283,23 @@ public class LessonPurchaseHandler {
         // Get the number of remaining sessions
         // Check if remaining sessions are equal to purchased sessions
         // If so, delete the record
+
         int remaining = rset.getInt("remainingSessions");
+
         if (remaining == rset.getInt("sessionsPurchased")) {
+          // Delete the lesson purchase record
           String deleteSQL = "DELETE FROM group14.LessonPurchase WHERE orderID = " + orderID;
           stmt.executeUpdate(deleteSQL);
+
+          // Log delete
+          String logSQL =
+              "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+                  + "'delete', 'LessonPurchase', '"
+                  + orderID
+                  + "', SYSDATE)";
+          stmt.executeUpdate(logSQL);
+
+          // Print confirmation message
           System.out.println("Lesson purchase deleted successfully.");
         } else {
           // Print message if sessions have been used
