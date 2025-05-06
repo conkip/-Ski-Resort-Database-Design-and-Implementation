@@ -10,6 +10,11 @@
 - Connor Kippes:
 
 - MohannadHossein Rezaei:
+    Query 3; 
+    writeups i, ii; 
+    functionalities and handlers for equipment inventory, equipment rental, lesson; 
+    main, Queries, and DML structures;
+    code organization and documentation;
 
 - Luis Felix:
 
