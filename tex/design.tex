@@ -38,6 +38,19 @@
 \section{Normalization analysis}
 
 \section{Query description}
+\subsection{Custom Query: Monthly Income Summary}
 
+\textbf{Query Goal:} Calculate the gross monthly income of the resort by subtracting total employee salaries from the sum of all incomes recorded across the properties.
+
+\textbf{Motivation:} This query helps stakeholders monitor the profitability of the resort’s operations, combining staff payroll and property performance in a single monthly snapshot.
+
+\textbf{Relations Involved:}
+\begin{itemize}
+  \item \texttt{Property}
+  \item \texttt{Shop}
+  \item \texttt{Employee}
+\end{itemize}
+
+\textbf{Query Details:} For each month, aggregate total income from properties (e.g., gift shops, rental centers), subtract the sum of salaries of all employees, and report the net income. This could be extended to include breakdowns by property type or department.
 
 \end{document}
