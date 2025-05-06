@@ -24,3 +24,5 @@ INSERT INTO group14.LessonPurchase VALUES (
     10,
     500.00
 );
+
+commit;

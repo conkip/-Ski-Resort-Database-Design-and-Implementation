@@ -24,3 +24,5 @@ INSERT INTO group14.Lift VALUES (
     'Beginner',
     0
 );
+
+commit;
