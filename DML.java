@@ -230,7 +230,7 @@ public class DML {
 
       } else if (choice == 3) {
         System.out.println("Enter the memberID for the account you would like to delete:");
-        String memberID = scanner.nextLine();
+        int memberID = scanner.nextInt();
 
         MemberHandler.deleteMember(dbconn, memberID);
       } else {
