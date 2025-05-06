@@ -57,7 +57,7 @@ public class EquipmentInventoryHandler {
 
   public static void displaySummary(Connection dbconn) {
     String query =
-        "SELECT equipmentID, type, size "
+        "SELECT equipmentID, equipmentType, equipmentSize "
             + "FROM nathanlamont.Equipment "
             + "WHERE archived = 0 "
             + "ORDER BY equipmentID";
@@ -70,8 +70,8 @@ public class EquipmentInventoryHandler {
 
       while (rset.next()) {
         int id = rset.getInt("equipmentID");
-        String type = rset.getString("type");
-        String size = rset.getString("size");
+        String type = rset.getString("equipmentType");
+        String size = rset.getString("equipmentSize");
 
         System.out.printf("%-12d %-12s %-12s\n", id, type, size);
       }
@@ -121,7 +121,7 @@ public class EquipmentInventoryHandler {
       }
 
       String insertSQL =
-          "INSERT INTO nathanlamont.Equipment (equipmentID, type, size, archived) "
+          "INSERT INTO nathanlamont.Equipment (equipmentID, equipmentType, equipmentSize, archived) "
               + "VALUES ("
               + newEquipmentID
               + ", '"
@@ -160,9 +160,9 @@ public class EquipmentInventoryHandler {
   public static void updateEquipment(Connection dbconn, int id, String type, String size) {
     try (Statement stmt = dbconn.createStatement()) {
       String sql =
-          "UPDATE nathanlamont.Equipment SET type = '"
+          "UPDATE nathanlamont.Equipment SET equipmentType = '"
               + type
-              + "', size = '"
+              + "', equipmentSize = '"
               + size
               + "' "
               + "WHERE equipmentID = "

@@ -234,7 +234,7 @@ public class Queries {
             + ";\n";
 
     String query2 =
-        "Select passID as Pass, type, rentalTime, returnStatus\n"
+        "Select passID as Pass, equipmentType, rentalTime, returnStatus\n"
             + "From nathanlamont.Pass \n"
             + "JOIN nathanlamont.Rental USING (passID)\n"
             + "JOIN nathanlamont.Equipment USING (equipmentID) \n"
@@ -264,7 +264,7 @@ public class Queries {
 
       while (rset.next()) {
         String idno = rset.getString("Pass");
-        String eqtype = rset.getString("type");
+        String eqtype = rset.getString("equipmentType");
         Date rentalTime = rset.getDate("rentalTime");
         int status = rset.getInt("returnStatus");
         System.out.println(
