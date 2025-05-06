@@ -39,7 +39,7 @@ public class RentalHandler {
     // SQL query to select all rental records
     String query =
         "SELECT rentalID, equipmentID, passID, rentalTime, returnStatus "
-            + "FROM group14.Rental ORDER BY rentalID";
+            + "FROM nathanlamont.Rental ORDER BY rentalID";
     try (Statement stmt = dbconn.createStatement();
         ResultSet rset = stmt.executeQuery(query)) {
 
@@ -94,7 +94,7 @@ public class RentalHandler {
     try (Statement stmt = dbconn.createStatement()) {
       // Check if the equipment is already rented out
       String checkSQL =
-          "SELECT COUNT(*) FROM group14.Rental WHERE equipmentID = "
+          "SELECT COUNT(*) FROM nathanlamont.Rental WHERE equipmentID = "
               + equipmentID
               + " AND returnStatus = 0";
       ResultSet rset = stmt.executeQuery(checkSQL);
@@ -109,7 +109,7 @@ public class RentalHandler {
       boolean rentalIDExists = true;
       while (rentalIDExists) {
         String checkRentalIDSQL =
-            "SELECT COUNT(*) FROM group14.Rental WHERE rentalID = " + rentalID;
+            "SELECT COUNT(*) FROM nathanlamont.Rental WHERE rentalID = " + rentalID;
         ResultSet checkRset = stmt.executeQuery(checkRentalIDSQL);
         if (checkRset.next() && checkRset.getInt(1) == 0) {
           rentalIDExists = false; // Rental ID is unique
@@ -120,8 +120,8 @@ public class RentalHandler {
 
       // Insert the new rental record
       String sql =
-          "INSERT INTO group14.Rental (rentalID, equipmentID, passID, rentalTime, returnStatus) "
-              + "VALUES (group14.rental_seq.NEXTVAL, "
+          "INSERT INTO nathanlamont.Rental (rentalID, equipmentID, passID, rentalTime, returnStatus) "
+              + "VALUES (nathanlamont.rental_seq.NEXTVAL, "
               + rentalID
               + ", "
               + equipmentID
@@ -159,7 +159,7 @@ public class RentalHandler {
     try (Statement stmt = dbconn.createStatement()) {
       // Check if the rental ID exists and is not already returned
       String sql =
-          "UPDATE group14.Rental SET returnStatus = 1 "
+          "UPDATE nathanlamont.Rental SET returnStatus = 1 "
               + "WHERE equipmentID = "
               + equipmentID
               + " AND returnStatus = 0";
@@ -169,7 +169,7 @@ public class RentalHandler {
 
         // Log update
         String logSQL =
-            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+            "INSERT INTO nathanlamont.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
                 + "'update', 'Rental', '"
                 + equipmentID
                 + "', SYSDATE)";
@@ -207,17 +207,17 @@ public class RentalHandler {
   public static void deleteRental(Connection dbconn, int rentalID) {
     try (Statement stmt = dbconn.createStatement()) {
       // Only delete if the returnStatus = 0
-      String checkSQL = "SELECT returnStatus FROM group14.Rental WHERE rentalID = " + rentalID;
+      String checkSQL = "SELECT returnStatus FROM nathanlamont.Rental WHERE rentalID = " + rentalID;
       ResultSet rset = stmt.executeQuery(checkSQL);
 
       // Check if the rental ID exists and is not already returned
       if (rset.next() && rset.getInt("returnStatus") == 0) {
-        String sql = "DELETE FROM group14.Rental WHERE rentalID = " + rentalID;
+        String sql = "DELETE FROM nathanlamont.Rental WHERE rentalID = " + rentalID;
         stmt.executeUpdate(sql);
 
         // Log deletion
         String logSQL =
-            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+            "INSERT INTO nathanlamont.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
                 + "'delete', 'Rental', '"
                 + rentalID
                 + "', SYSDATE)";

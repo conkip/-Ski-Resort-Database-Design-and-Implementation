@@ -1,4 +1,4 @@
-CREATE TABLE group14.Property (
+CREATE TABLE nathanlamont.Property (
     propertyID INTEGER,
     name VARCHAR2(30),
     address VARCHAR2(30),
@@ -6,51 +6,51 @@ CREATE TABLE group14.Property (
     primary key (PropertyID));
     
 
-CREATE TABLE group14.Shop (
+CREATE TABLE nathanlamont.Shop (
     shopID INTEGER,
     name VARCHAR2(30),
     type VARCHAR2(15),
     buildingID INTEGER,
     income NUMBER(12, 2),
-    foreign key (buildingID) references group14.Property(propertyID),
+    foreign key (buildingID) references nathanlamont.Property(propertyID),
     primary key (shopID));
 
 
-CREATE TABLE group14.Equipment (
+CREATE TABLE nathanlamont.Equipment (
     equipmentID INTEGER,
     type VARCHAR2(15),
     size VARCHAR2 (15),
     archived NUMBER(1),
     primary key (equipmentID));
 
-CREATE TABLE group14.Rental (
+CREATE TABLE nathanlamont.Rental (
     rentalID INTEGER,
     equipmentID INTEGER,
     passID varchar2(15),
     rentalTime DATE,
     returnStatus NUMBER(1),
-    foreign key (passID) references group14.Pass(passID),
-    foreign key (equipmentID) references group14.Equipment(equipmentID),
+    foreign key (passID) references nathanlamont.Pass(passID),
+    foreign key (equipmentID) references nathanlamont.Equipment(equipmentID),
     primary Key (rentalID));
 
-CREATE TABLE group14.Pass (
+CREATE TABLE nathanlamont.Pass (
     passID varchar2(15),
     memberID INTEGER,
     numUses INTEGER,
     passType VARCHAR2(15),
     price NUMBER(10,2),
     exprDate DATE,
-    foreign key (memberID) references group14.Member(memberID),
+    foreign key (memberID) references nathanlamont.Member(memberID),
     primary key (passID));
 
-CREATE TABLE group14.LiftLog (
+CREATE TABLE nathanlamont.LiftLog (
     passID varchar2(15),
     liftID INTEGER,
-    foreign key (passID) references group14.Pass(passID),
-    foreign key (liftID) references group14.Lift(liftID),
+    foreign key (passID) references nathanlamont.Pass(passID),
+    foreign key (liftID) references nathanlamont.Lift(liftID),
     dateTime DATE);
 
-CREATE TABLE group14.Lift (
+CREATE TABLE nathanlamont.Lift (
     liftID VARCHAR2(15),
     liftName VARCHAR2(15),
     openTime TIMESTAMP,
@@ -60,14 +60,14 @@ CREATE TABLE group14.Lift (
     primary key (liftID)
     );
 
-CREATE TABLE group14.TrailLift (
+CREATE TABLE nathanlamont.TrailLift (
     liftID VARCHAR2(15),
     trailName VARCHAR2(15),
-    foreign key (trailName) references group14.Trail(name),
-    foreign key (liftID) references group14.Lift(liftID)
+    foreign key (trailName) references nathanlamont.Trail(name),
+    foreign key (liftID) references nathanlamont.Lift(liftID)
     );
 
-CREATE TABLE group14.Trail (
+CREATE TABLE nathanlamont.Trail (
     name VARCHAR2(15),
     category VARCHAR2(15),
     start VARCHAR2(15),
@@ -76,7 +76,7 @@ CREATE TABLE group14.Trail (
     difficulty VARCHAR2(15),
     primary key (name));
 
-CREATE TABLE group14.Member (
+CREATE TABLE nathanlamont.Member (
     memberID INTEGER,
     name VARCHAR2(15),
     phoneNUMBER VARCHAR2(15),
@@ -88,34 +88,34 @@ CREATE TABLE group14.Member (
     primary key (memberID)
     );
 
-CREATE TABLE group14.LessonLog (
+CREATE TABLE nathanlamont.LessonLog (
     orderID INTEGER,
     dateTime DATE,
-    foreign key (orderID) references group14.LessonPurchase(orderID)
+    foreign key (orderID) references nathanlamont.LessonPurchase(orderID)
     );
 
-CREATE TABLE group14.LessonPurchase (
+CREATE TABLE nathanlamont.LessonPurchase (
     orderID INTEGER,
     memberID INTEGER,
     lessonID INTEGER,
     sessionsPurchased NUMBER(5),
     remainingSessions NUMBER(5),
     price NUMBER(5,2),
-    foreign key (memberID) references group14.Member(memberID),
-    foreign key (lessonID) references group14.LessonOffering(lessonID),
+    foreign key (memberID) references nathanlamont.Member(memberID),
+    foreign key (lessonID) references nathanlamont.LessonOffering(lessonID),
     primary key (orderID)
     );
 
-CREATE TABLE group14.LessonOffering (
+CREATE TABLE nathanlamont.LessonOffering (
     lessonID INTEGER,
     instructorID VARCHAR2(15),
     type VARCHAR2(15),
     level VARCHAR2(15),
     schedule VARCHAR2(15),
-    foreign key (instructorID) references group14.Employee(employeeID),
+    foreign key (instructorID) references nathanlamont.Employee(employeeID),
     primary key(lessonID));
 
-CREATE TABLE group14.Employee (
+CREATE TABLE nathanlamont.Employee (
     employeeID VARCHAR2(15),
     name VARCHAR2(15),
     phone VARCHAR2(15),
@@ -127,11 +127,11 @@ CREATE TABLE group14.Employee (
     ethnicity VARCHAR2(15),
     dateBirth DATE,
     propertyID INTEGER,
-    foreign key (propertyID) references group14.Property(propertyID),
+    foreign key (propertyID) references nathanlamont.Property(propertyID),
     primary key (employeeID)
     );
 
-CREATE TABLE group14.Updates (
+CREATE TABLE nathanlamont.Updates (
     updateType varchar2(15), -- delete or update
     tableChanged varchar2(25), -- table affected
     changeID varchar(25), --pk of whatever was changed
@@ -140,21 +140,21 @@ CREATE TABLE group14.Updates (
 
 commit;
 
-GRANT ALL ON group14.Property TO PUBLIC;
-GRANT ALL ON group14.Shop TO PUBLIC;
-GRANT ALL ON group14.Equipment TO PUBLIC;
-GRANT ALL ON group14.Rental TO PUBLIC;
-GRANT ALL ON group14.Pass TO PUBLIC;
-GRANT ALL ON group14.LiftLog TO PUBLIC;
-GRANT ALL ON group14.Lift TO PUBLIC;
-GRANT ALL ON group14.TrailLift TO PUBLIC;
-GRANT ALL ON group14.Trail TO PUBLIC;
-GRANT ALL ON group14.Member TO PUBLIC;
-GRANT ALL ON group14.LessonLog TO PUBLIC;
-GRANT ALL ON group14.LessonPurchase TO PUBLIC;
-GRANT ALL ON group14.LessonOffering TO PUBLIC;
-GRANT ALL ON group14.Employee TO PUBLIC;
-GRANT ALL ON group14.Updates TO PUBLIC;
+GRANT ALL ON nathanlamont.Property TO PUBLIC;
+GRANT ALL ON nathanlamont.Shop TO PUBLIC;
+GRANT ALL ON nathanlamont.Equipment TO PUBLIC;
+GRANT ALL ON nathanlamont.Rental TO PUBLIC;
+GRANT ALL ON nathanlamont.Pass TO PUBLIC;
+GRANT ALL ON nathanlamont.LiftLog TO PUBLIC;
+GRANT ALL ON nathanlamont.Lift TO PUBLIC;
+GRANT ALL ON nathanlamont.TrailLift TO PUBLIC;
+GRANT ALL ON nathanlamont.Trail TO PUBLIC;
+GRANT ALL ON nathanlamont.Member TO PUBLIC;
+GRANT ALL ON nathanlamont.LessonLog TO PUBLIC;
+GRANT ALL ON nathanlamont.LessonPurchase TO PUBLIC;
+GRANT ALL ON nathanlamont.LessonOffering TO PUBLIC;
+GRANT ALL ON nathanlamont.Employee TO PUBLIC;
+GRANT ALL ON nathanlamont.Updates TO PUBLIC;
 
 commit;
 

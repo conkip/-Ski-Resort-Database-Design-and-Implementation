@@ -1,4 +1,4 @@
-INSERT INTO group14.Rental VALUES (
+INSERT INTO nathanlamont.Rental VALUES (
     201,
     1,
     'P1',
@@ -6,7 +6,7 @@ INSERT INTO group14.Rental VALUES (
     0
 );
 
-INSERT INTO group14.Rental VALUES (
+INSERT INTO nathanlamont.Rental VALUES (
     202,
     2,
     'P2',
@@ -14,7 +14,7 @@ INSERT INTO group14.Rental VALUES (
     1
 );
 
-INSERT INTO group14.Rental VALUES (
+INSERT INTO nathanlamont.Rental VALUES (
     203,
     3,
     'P3',
@@ -22,7 +22,7 @@ INSERT INTO group14.Rental VALUES (
     0
 );
 
-INSERT INTO group14.Rental VALUES (
+INSERT INTO nathanlamont.Rental VALUES (
     204,
     4,
     'P4',
@@ -30,7 +30,7 @@ INSERT INTO group14.Rental VALUES (
     1
 );
 
-INSERT INTO group14.Rental VALUES (
+INSERT INTO nathanlamont.Rental VALUES (
     205,
     5,
     'P5',

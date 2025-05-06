@@ -1,4 +1,4 @@
-INSERT INTO group14.Member VALUES (
+INSERT INTO nathanlamont.Member VALUES (
     1,
     'Tiger Woods',
     '555-111-2222',
@@ -8,7 +8,7 @@ INSERT INTO group14.Member VALUES (
     '555-111-9999',
     'earlw@email.com');
 
-INSERT INTO group14.Member VALUES (
+INSERT INTO nathanlamont.Member VALUES (
     2,
     'Phil Mickelson',
     '555-222-3333',
@@ -18,7 +18,7 @@ INSERT INTO group14.Member VALUES (
     '555-222-8888',
     'marym@email.com');
 
-INSERT INTO group14.Member VALUES (
+INSERT INTO nathanlamont.Member VALUES (
     3,
     'Rory McIlroy',
     '555-333-4444',
@@ -28,7 +28,7 @@ INSERT INTO group14.Member VALUES (
     '555-333-7777',
     'rosiem@email.com');
 
-INSERT INTO group14.Member VALUES (
+INSERT INTO nathanlamont.Member VALUES (
     4,
     'Arnold Palmer',
     '555-444-5555',
@@ -38,7 +38,7 @@ INSERT INTO group14.Member VALUES (
     '555-444-6666',
     'anotherp@email.com');
 
-INSERT INTO group14.Member VALUES (
+INSERT INTO nathanlamont.Member VALUES (
     5,
     'Brooks Koepka',
     '555-555-6666',

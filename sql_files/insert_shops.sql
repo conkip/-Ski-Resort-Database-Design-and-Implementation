@@ -1,4 +1,4 @@
-INSERT INTO group14.Shop VALUES (
+INSERT INTO nathanlamont.Shop VALUES (
     101,
     'Alpine Gifts',
     'Giftshop',
@@ -6,7 +6,7 @@ INSERT INTO group14.Shop VALUES (
     4500.00
 );
 
-INSERT INTO group14.Shop VALUES (
+INSERT INTO nathanlamont.Shop VALUES (
     102,
     'Summit Grill',
     'Restaurant',
@@ -14,7 +14,7 @@ INSERT INTO group14.Shop VALUES (
     12000.00
 );
 
-INSERT INTO group14.Shop VALUES (
+INSERT INTO nathanlamont.Shop VALUES (
     103,
     'Snow Lot A',
     'Paid Parking Lot',
@@ -22,7 +22,7 @@ INSERT INTO group14.Shop VALUES (
     11123.12
 );
 
-INSERT INTO group14.Shop VALUES (
+INSERT INTO nathanlamont.Shop VALUES (
     104,
     'Edge Rentals',
     'Rental Store',
@@ -30,7 +30,7 @@ INSERT INTO group14.Shop VALUES (
     10000.00
 );
 
-INSERT INTO group14.Shop VALUES (
+INSERT INTO nathanlamont.Shop VALUES (
     105,
     'Evergreen Cafe',
     'Restaurant',
@@ -38,7 +38,7 @@ INSERT INTO group14.Shop VALUES (
     13500.00
 );
 
-INSERT INTO group14.Shop VALUES (
+INSERT INTO nathanlamont.Shop VALUES (
     106,
     'Peak Lot',
     'Paid Parking Lot',
@@ -46,7 +46,7 @@ INSERT INTO group14.Shop VALUES (
     36123.00
 );
 
-INSERT INTO group14.Shop VALUES (
+INSERT INTO nathanlamont.Shop VALUES (
     107,
     'Crystal Crafts',
     'Gift Shop',
@@ -54,7 +54,7 @@ INSERT INTO group14.Shop VALUES (
     4877.23
 );
 
-INSERT INTO group14.Shop VALUES (
+INSERT INTO nathanlamont.Shop VALUES (
     108,
     'Snow Snacks',
     'Restaurant',
@@ -62,7 +62,7 @@ INSERT INTO group14.Shop VALUES (
     25123.22
 );
 
-INSERT INTO group14.Shop VALUES (
+INSERT INTO nathanlamont.Shop VALUES (
     109,
     'Snow Supplies',
     'Rental Store',

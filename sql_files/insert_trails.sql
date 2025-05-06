@@ -1,4 +1,4 @@
-INSERT INTO group14.Trail VALUES (
+INSERT INTO nathanlamont.Trail VALUES (
     'Frosty Pines',
     'Glade',
     'Summit Station',
@@ -7,7 +7,7 @@ INSERT INTO group14.Trail VALUES (
     'Intermediate'
 );
 
-INSERT INTO group14.Trail VALUES (
+INSERT INTO nathanlamont.Trail VALUES (
     'Mogul Mayhem',
     'Moguls',
     'Rocky Crest',
@@ -16,7 +16,7 @@ INSERT INTO group14.Trail VALUES (
     'Advanced'
 );
 
-INSERT INTO group14.Trail VALUES (
+INSERT INTO nathanlamont.Trail VALUES (
     'Snow Garden',
     'Groomed',
     'Beginner Ridge',
@@ -25,7 +25,7 @@ INSERT INTO group14.Trail VALUES (
     'Beginner'
 );
 
-INSERT INTO group14.Trail VALUES (
+INSERT INTO nathanlamont.Trail VALUES (
     'Chilly Canyon',
     'Glade',
     'North Rim',
@@ -34,7 +34,7 @@ INSERT INTO group14.Trail VALUES (
     'Intermediate'
 );
 
-INSERT INTO group14.Trail VALUES (
+INSERT INTO nathanlamont.Trail VALUES (
     'Powder Playground',
     'Park',
     'Midline Park',
@@ -43,7 +43,7 @@ INSERT INTO group14.Trail VALUES (
     'Intermediate'
 );
 
-INSERT INTO group14.Trail VALUES (
+INSERT INTO nathanlamont.Trail VALUES (
     'Icicle Twist',
     'Groomed',
     'Crest Entry',

@@ -1,4 +1,4 @@
-INSERT INTO group14.Pass VALUES (
+INSERT INTO nathanlamont.Pass VALUES (
     'P1',
     1,
     100,
@@ -7,7 +7,7 @@ INSERT INTO group14.Pass VALUES (
     TO_DATE('2025-12-31', 'YYYY-MM-DD')
 );
 
-INSERT INTO group14.Pass VALUES (
+INSERT INTO nathanlamont.Pass VALUES (
     'P2',
     2,
     8,
@@ -16,7 +16,7 @@ INSERT INTO group14.Pass VALUES (
     TO_DATE('2025-04-30', 'YYYY-MM-DD')
 );
 
-INSERT INTO group14.Pass VALUES (
+INSERT INTO nathanlamont.Pass VALUES (
     'P3',
     3,
     22,
@@ -25,7 +25,7 @@ INSERT INTO group14.Pass VALUES (
     TO_DATE('2025-08-31', 'YYYY-MM-DD')
 );
 
-INSERT INTO group14.Pass VALUES (
+INSERT INTO nathanlamont.Pass VALUES (
     'P4',
     4,
     60,
@@ -34,7 +34,7 @@ INSERT INTO group14.Pass VALUES (
     TO_DATE('2025-12-31', 'YYYY-MM-DD')
 );
 
-INSERT INTO group14.Pass VALUES (
+INSERT INTO nathanlamont.Pass VALUES (
     'P5',
     5,
     7,
@@ -43,7 +43,7 @@ INSERT INTO group14.Pass VALUES (
     TO_DATE('2025-04-30', 'YYYY-MM-DD')
 );
 
-INSERT INTO group14.Pass VALUES (
+INSERT INTO nathanlamont.Pass VALUES (
     'P6',
     5,
     10,
