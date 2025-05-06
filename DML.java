@@ -150,7 +150,32 @@ public class DML {
   }
 
   private void skiPasses() {
-    // Implement the logic for Ski Passes table
+	  System.out.println("- Ski Pass Management -");
+	  System.out.println("1) Add new Ski Pass.");
+	  System.out.println("2) Update Usage Information on a Ski Pass.");
+	  System.out.println("3) Remove a Ski Pass.");
+	  
+	  try (Scanner sc = new Scanner(System.in)) {
+			System.out.print("Select an option or type 'Quit' to exit: ");
+			while (true) {
+				String choice = sc.nextLine();
+				if (choice.equals("1")) {
+					
+					SkiPassHandler.addPass(dbconn);
+					return;
+				} else if (choice.equals("2")) {
+					SkiPassHandler.updatePass(dbconn);
+					return;
+				} else if (choice.equals("3")) {
+					SkiPassHandler.deletePass(dbconn);
+					return;
+				} 
+				else if (choice.equals("Quit") || choice.equals("quit")) {
+					return;
+				} else
+					System.out.println("Invalid Input, Try Again.");
+			}
+		}
   }
 
   private void skiLessons() {
