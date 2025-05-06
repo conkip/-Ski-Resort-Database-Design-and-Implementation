@@ -18,3 +18,5 @@ INSERT INTO group14.Property VALUES (
     '5 Snowcap Trail',
     'Lodge'
 );
+
+commit;

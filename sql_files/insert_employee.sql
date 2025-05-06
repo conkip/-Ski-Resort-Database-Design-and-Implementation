@@ -81,3 +81,5 @@ INSERT INTO group14.Employee VALUES (
     TO_DATE('1992-11-30', 'YYYY-MM-DD'),
     3
 );
+
+commit;
