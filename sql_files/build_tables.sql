@@ -133,7 +133,9 @@ CREATE TABLE group14.Employee (
 
 CREATE TABLE group14.Updates (
     updateType varchar2(15), -- delete or update
-    tableChanged varchar2(25) -- table affected
+    tableChanged varchar2(25), -- table affected
+    changeID varchar(25), --pk of whatever was changed
+    dateTime DATE
 );
 
 commit;
