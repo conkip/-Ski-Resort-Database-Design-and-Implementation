@@ -166,6 +166,15 @@ public class RentalHandler {
       int updated = stmt.executeUpdate(sql);
       // Check if the update was successful
       if (updated > 0) {
+
+        // Log update
+        String logSQL =
+            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+                + "'update', 'Rental', '"
+                + equipmentID
+                + "', SYSDATE)";
+        stmt.executeUpdate(logSQL);
+
         System.out.println("Item is returned successfully.");
       } else {
         System.out.println("Equipment ID not found or already returned.");
@@ -205,6 +214,15 @@ public class RentalHandler {
       if (rset.next() && rset.getInt("returnStatus") == 0) {
         String sql = "DELETE FROM group14.Rental WHERE rentalID = " + rentalID;
         stmt.executeUpdate(sql);
+
+        // Log deletion
+        String logSQL =
+            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+                + "'delete', 'Rental', '"
+                + rentalID
+                + "', SYSDATE)";
+        stmt.executeUpdate(logSQL);
+
         System.out.println("Rental record deleted successfully.");
       } else {
         // Rental ID does not exist or is already returned
