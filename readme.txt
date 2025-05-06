@@ -1,9 +1,11 @@
 
 **Compilation and execution instructions**
-- compile program via "javac main.java"
-- compile handlers via "<handler compilation here>"
+- clone repo via command line "git clone https://github.com/conkip/Ski-Resort-Database"
+- add java drivers via command line "export CLASSPATH=/usr/lib/oracle/19.8/client64/lib/ojdbc8.jar:${CLASSPATH}"
+- compile program via "javac Main.java"
 - run via "java main <username> <password>"
 - proceed through text menu as desired
+- ctrl+d to exit
 
 **Workload Distribution**
 - Nathan Lamont:
