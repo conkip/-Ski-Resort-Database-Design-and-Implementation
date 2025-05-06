@@ -18,7 +18,7 @@
 \newcommand{\mat}[1]{\begin{bmatrix} #1 \end{bmatrix}}
 
 % % % % % Information % % % % %
-\title{Prog \#4: Database Design and Implementation}
+\title{Ski Resort Database Design}
 \author{Group 14: Connor, Luis, Mohammad, Nathan}
 \date{Spring 2025}
 \hypersetup
@@ -32,9 +32,18 @@
 \tableofcontents
 
 \section{Conceptual database design}
+Figure~\ref{fig:er_diagram} shows the E--R diagram of the ski resort database. 
 To design the conceptual schema of the database we first did a detailed walk through fot the program specifications to record what tables are going to be needed to store data. 
 The ER diagram we made captures the ski resorts day to day operations tracking members and their activites as well as the resorts staff and income via its services. Attributes
 are constrained via sql datatypes.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1.1\textwidth]{er.pdf}
+  \caption{E--R Diagram of the Ski Resort Database}
+  \label{fig:er_diagram}
+\end{figure}
+
 \section{Logical database design}
 
 Below is the final relational schema derived from the E--R diagram. Each table lists its attributes, primary keys (\textbf{PK}), and foreign keys (\textbf{FK}) explicitly. 
