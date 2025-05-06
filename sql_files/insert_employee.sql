@@ -1,4 +1,4 @@
-INSERT INTO group14.Employee VALUES (
+INSERT INTO nathanlamont.Employee VALUES (
     'E001',
     'Samantha Frost',
     '555-101-2020',
@@ -12,7 +12,7 @@ INSERT INTO group14.Employee VALUES (
     1
 );
 
-INSERT INTO group14.Employee VALUES (
+INSERT INTO nathanlamont.Employee VALUES (
     'E002',
     'Liam Snow',
     '555-202-3030',
@@ -26,7 +26,7 @@ INSERT INTO group14.Employee VALUES (
     2
 );
 
-INSERT INTO group14.Employee VALUES (
+INSERT INTO nathanlamont.Employee VALUES (
     'E003',
     'Ava Glacier',
     '555-303-4040',
@@ -40,7 +40,7 @@ INSERT INTO group14.Employee VALUES (
     3
 );
 
-INSERT INTO group14.Employee VALUES (
+INSERT INTO nathanlamont.Employee VALUES (
     'E004',
     'Noah Ridge',
     '555-404-5050',
@@ -54,7 +54,7 @@ INSERT INTO group14.Employee VALUES (
     1
 );
 
-INSERT INTO group14.Employee VALUES (
+INSERT INTO nathanlamont.Employee VALUES (
     'E005',
     'Emma Peak',
     '555-505-6060',
@@ -68,7 +68,7 @@ INSERT INTO group14.Employee VALUES (
     2
 );
 
-INSERT INTO group14.Employee VALUES (
+INSERT INTO nathanlamont.Employee VALUES (
     'E006',
     'James Blizzard',
     '555-606-7070',

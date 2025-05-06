@@ -1,4 +1,4 @@
-INSERT INTO group14.Lift VALUES (
+INSERT INTO nathanlamont.Lift VALUES (
     'lift1',
     'Mountain Escape',
     TO_TIMESTAMP('2025-04-15 07:00:00', 'YYYY-MM-DD HH24:MI:SS'),
@@ -7,7 +7,7 @@ INSERT INTO group14.Lift VALUES (
     1
 );
 
-INSERT INTO group14.Lift VALUES (
+INSERT INTO nathanlamont.Lift VALUES (
     'lift2',
     'Snow Train',
     TO_TIMESTAMP('2025-04-15 07:00:00', 'YYYY-MM-DD HH24:MI:SS'),
@@ -16,7 +16,7 @@ INSERT INTO group14.Lift VALUES (
     1
 );
 
-INSERT INTO group14.Lift VALUES (
+INSERT INTO nathanlamont.Lift VALUES (
     'lift3',
     'Bunny Hop',
     TO_TIMESTAMP('2025-04-15 07:00:00', 'YYYY-MM-DD HH24:MI:SS'),

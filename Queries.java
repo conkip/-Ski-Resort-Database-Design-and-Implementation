@@ -161,10 +161,10 @@ public class Queries {
 
     String sql =
         "SELECT lp.remainingSessions, e.name AS instructor_name, lo.schedule AS scheduled_time \n"
-            + "FROM group14.LessonPurchase lp \n"
-            + "JOIN group14.lessonOffering lo ON lo.lessonID = lp.lessonID \n"
-            + "JOIN group14.Employee e ON lo.instructorID = e.employeeID \n"
-            + "JOIN group14.Member m ON m.memberID = lp.memberID \n"
+            + "FROM nathanlamont.LessonPurchase lp \n"
+            + "JOIN nathanlamont.lessonOffering lo ON lo.lessonID = lp.lessonID \n"
+            + "JOIN nathanlamont.Employee e ON lo.instructorID = e.employeeID \n"
+            + "JOIN nathanlamont.Member m ON m.memberID = lp.memberID \n"
             + "WHERE m.memberID = '" + memberID + "'";
 
     try {
@@ -226,18 +226,18 @@ public class Queries {
 
     String query1 =
         "Select passID as Pass, liftID, liftName as Trail, dateTime\n"
-            + "From group14.Pass \n"
-            + "JOIN group14.LiftLog USING (passID)\n"
-            + "JOIN group14.Lift USING (liftID) \n"
+            + "From nathanlamont.Pass \n"
+            + "JOIN nathanlamont.LiftLog USING (passID)\n"
+            + "JOIN nathanlamont.Lift USING (liftID) \n"
             + "WHERE Pass = "
             + pass
             + ";\n";
 
     String query2 =
         "Select passID as Pass, type, rentalTime, returnStatus\n"
-            + "From group14.Pass \n"
-            + "JOIN group14.Rental USING (passID)\n"
-            + "JOIN group14.Equipment USING (equipmentID) \n"
+            + "From nathanlamont.Pass \n"
+            + "JOIN nathanlamont.Rental USING (passID)\n"
+            + "JOIN nathanlamont.Equipment USING (equipmentID) \n"
             + "WHERE Pass = "
             + pass
             + ";\n";
@@ -307,9 +307,9 @@ public class Queries {
     String sql =
         "SELECT t.name AS trail_name, t.category, "
             + "LISTAGG(l.liftName, ', ') WITHIN GROUP (ORDER BY l.liftName) AS lifts "
-            + "FROM group14.Trail t "
-            + "JOIN group14.TrailLift tl ON t.name = tl.trail_name "
-            + "JOIN group14.Lift l ON tl.liftID = l.liftID "
+            + "FROM nathanlamont.Trail t "
+            + "JOIN nathanlamont.TrailLift tl ON t.name = tl.trail_name "
+            + "JOIN nathanlamont.Lift l ON tl.liftID = l.liftID "
             + "WHERE t.difficulty = 'Intermediate' AND t.status = 1 AND l.status = 1 "
             + "GROUP BY t.name, t.category";
 
@@ -360,15 +360,15 @@ public class Queries {
 
     String propertySql =
         "SELECT p.propertyID, p.name, SUM(s.income) AS monthly_income "
-            + "FROM group14.Shop s "
-            + "JOIN group14.Property p ON s.buildingID = p.propertyID "
+            + "FROM nathanlamont.Shop s "
+            + "JOIN nathanlamont.Property p ON s.buildingID = p.propertyID "
             + "GROUP BY p.propertyID, p.name "
             + "ORDER BY p.propertyID;";
 
     String employeeSql =
         "SELECT p.propertyID, p.name, SUM(e.monthlySalary) AS monthly_cost "
-            + "FROM group14.Employee e "
-            + "JOIN group14.Property p ON e.propertyID = p.propertyID "
+            + "FROM nathanlamont.Employee e "
+            + "JOIN nathanlamont.Property p ON e.propertyID = p.propertyID "
             + "GROUP BY p.propertyID, p.name "
             + "ORDER BY p.propertyID;";
 

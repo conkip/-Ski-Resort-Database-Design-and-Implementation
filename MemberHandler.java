@@ -70,7 +70,7 @@ public class MemberHandler {
     // Ensure the memberID is unique
     while (!unique) {
       try (Statement stmt = dbconn.createStatement()) {
-        String checkSQL = "SELECT memberID FROM group14.Memeber WHERE memberID = " + memberID;
+        String checkSQL = "SELECT memberID FROM nathanlamont.Memeber WHERE memberID = " + memberID;
         ResultSet rset = stmt.executeQuery(checkSQL);
         if (!rset.next()) {
           unique = true; // Unique memberID found
@@ -85,7 +85,7 @@ public class MemberHandler {
     // Insert the new lesson purchase into the database
     try (Statement stmt = dbconn.createStatement()) {
       String sql =
-          "INSERT INTO group14.Member VALUES ("
+          "INSERT INTO nathanlamont.Member VALUES ("
               + memberID
               + ", "
               + name
@@ -140,21 +140,21 @@ public class MemberHandler {
       String sql = "";
       if(phoneNumber != null) {
         sql = 
-            "UPDATE group14.Member SET phoneNumber = '"
+            "UPDATE nathanlamont.Member SET phoneNumber = '"
                 + phoneNumber + "'"
                 + " WHERE memberID = "
                 + memberID;
 
       } else if (email != null) {
         sql = 
-            "UPDATE group14.Member SET email = '"
+            "UPDATE nathanlamont.Member SET email = '"
                 + email + "'"
                 + " WHERE memberID = "
                 + memberID;
 
       } else { //if its the emergency contact being changed
         sql = 
-            "UPDATE group14.Member SET emergencyName = '"
+            "UPDATE nathanlamont.Member SET emergencyName = '"
                 + emergencyName + "'"
                 + ", emergencyPhone = '"
                 + emergencyPhone + "'"
@@ -172,7 +172,7 @@ public class MemberHandler {
         
         // Log update
         String logSQL =
-            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+            "INSERT INTO nathanlamont.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
                 + "'update', 'Member', " + memberID + ", SYSDATE)";
         stmt.executeUpdate(logSQL);
 
@@ -215,7 +215,7 @@ public class MemberHandler {
     try (Statement stmt = dbconn.createStatement()) {
       // Check if the order ID exists and get the remaining sessions
       String checkSQL =
-          "SELECT * FROM group14.Member WHERE memberID = " + memberID;
+          "SELECT * FROM nathanlamont.Member WHERE memberID = " + memberID;
       ResultSet rset = stmt.executeQuery(checkSQL);
       if (!rset.next()) {
         System.out.println("Member ID not found.");
@@ -224,7 +224,7 @@ public class MemberHandler {
 
       // Check for active passes (compare expiration date to current date)
       checkSQL =
-          "SELECT exprDate FROM group14.Pass WHERE memberID = " + memberID;
+          "SELECT exprDate FROM nathanlamont.Pass WHERE memberID = " + memberID;
       rset = stmt.executeQuery(checkSQL);
 
       LocalDate curDate = LocalDate.now();
@@ -245,8 +245,8 @@ public class MemberHandler {
       // Check for open rental records
       checkSQL =
           "SELECT returnStatus \n"
-            + "FROM group14.Pass p lp \n"
-            + "JOIN group14.Rental r ON p.passID = lp.passID \n"
+            + "FROM nathanlamont.Pass p lp \n"
+            + "JOIN nathanlamont.Rental r ON p.passID = lp.passID \n"
             + "WHERE p.memberID = " + memberID;
 
       rset = stmt.executeQuery(checkSQL);
@@ -279,7 +279,7 @@ public class MemberHandler {
 
 
       // delete member from the table
-      String deleteSQL = "DELETE FROM group14.Member WHERE memberID = " + memberID;
+      String deleteSQL = "DELETE FROM nathanlamont.Member WHERE memberID = " + memberID;
       stmt.executeUpdate(deleteSQL);
 
       // delete ski pass data, lift logs, and rental history
@@ -287,7 +287,7 @@ public class MemberHandler {
       // delete all stuff connected to the passes
       checkSQL =
           "SELECT passID \n"
-            + "FROM group14.Pass p \n"
+            + "FROM nathanlamont.Pass p \n"
             + "WHERE p.memberID = " + memberID;
 
       rset = stmt.executeQuery(checkSQL);
@@ -296,23 +296,23 @@ public class MemberHandler {
           int passID = rset.getInt("passID");
           
           // delete rental history
-          deleteSQL = "DELETE FROM group14.Rental WHERE passID = " + passID;
+          deleteSQL = "DELETE FROM nathanlamont.Rental WHERE passID = " + passID;
           stmt.executeUpdate(deleteSQL);
 
           // delete lift logs
-          deleteSQL = "DELETE FROM group14.LiftLog WHERE passID = " + passID;
+          deleteSQL = "DELETE FROM nathanlamont.LiftLog WHERE passID = " + passID;
           stmt.executeUpdate(deleteSQL);
       }
 
       // delete the pass itslef
-      deleteSQL = "DELETE FROM group14.Pass WHERE memberID = " + memberID;
+      deleteSQL = "DELETE FROM nathanlamont.Pass WHERE memberID = " + memberID;
       stmt.executeUpdate(deleteSQL);
 
 
       // delete lesson transactions
       checkSQL =
           "SELECT orderID \n"
-            + "FROM group14.LessonPurchase lp\n"
+            + "FROM nathanlamont.LessonPurchase lp\n"
             + "WHERE lp.memberID = " + memberID;
 
       rset = stmt.executeQuery(checkSQL);
@@ -321,12 +321,12 @@ public class MemberHandler {
           int orderID = rset.getInt("orderID");
           
           // delete lesson logs
-          deleteSQL = "DELETE FROM group14.LessonLog WHERE orderID = " + orderID;
+          deleteSQL = "DELETE FROM nathanlamont.LessonLog WHERE orderID = " + orderID;
           stmt.executeUpdate(deleteSQL);
       }
 
       // delete the lesson purchase
-      deleteSQL = "DELETE FROM group14.LessonPurchase WHERE memberID = " + memberID;
+      deleteSQL = "DELETE FROM nathanlamont.LessonPurchase WHERE memberID = " + memberID;
       stmt.executeUpdate(deleteSQL);
 
 
@@ -334,7 +334,7 @@ public class MemberHandler {
 
       // Log update
       String logSQL =
-          "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+          "INSERT INTO nathanlamont.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
               + "'delete', 'Member', " + memberID + ", SYSDATE)";
       stmt.executeUpdate(logSQL);
 

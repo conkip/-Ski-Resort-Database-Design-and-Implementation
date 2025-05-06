@@ -53,7 +53,7 @@ public class SkiPassHandler {
 		double price;
 		String expDate;
 		int curr = 0;
-		String query1 = "SELECT COUNT(*) AS count FROM group14.Pass;";
+		String query1 = "SELECT COUNT(*) AS count FROM nathanlamont.Pass;";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate today = LocalDate.now();
 		
@@ -96,7 +96,7 @@ public class SkiPassHandler {
 			return;
             }
 		String passID = "P" + curr;
-		String query2 = "Insert Into group14.Pass (passID, memberID, numUses, passType, price, exprDATE) VALUES (?, ?, ?, ?, ?, ?)";
+		String query2 = "Insert Into nathanlamont.Pass (passID, memberID, numUses, passType, price, exprDATE) VALUES (?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement query = dbconn.prepareStatement(query2)) {
                 query.setString(1, passID);
                 query.setString(2, memID);
@@ -135,7 +135,7 @@ public class SkiPassHandler {
 		try (Scanner sc = new Scanner(System.in)) {
             System.out.print("Enter Member ID of Pass: ");
             passID = sc.nextLine();
-            String query = "Select numUses from group14.Pass Where passID = ?";
+            String query = "Select numUses from nathanlamont.Pass Where passID = ?";
             try (PreparedStatement query2 = dbconn.prepareStatement(query)) {
                 query2.setString(1, passID);
                 ResultSet rset = query2.executeQuery();
@@ -156,7 +156,7 @@ public class SkiPassHandler {
 			}
 		}
 		if (val + curval >= 0) {
-			String query3 = "Update group14.Pass Set numUses = numUses + ? Where passID = ?";
+			String query3 = "Update nathanlamont.Pass Set numUses = numUses + ? Where passID = ?";
 			try (PreparedStatement update = dbconn.prepareStatement(query3)) {
 				update(dbconn, "update", passID);
                 update.setInt(1, val);
@@ -198,7 +198,7 @@ public class SkiPassHandler {
 		Date expDate = null;
 		LocalDate today = LocalDate.now();
 		Date today2 = (Date) Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		try (PreparedStatement query = dbconn.prepareStatement("Select numUses, exprDate from group14.Pass Where passID = ?")) {
+		try (PreparedStatement query = dbconn.prepareStatement("Select numUses, exprDate from nathanlamont.Pass Where passID = ?")) {
                 query.setString(1, passID);
                 ResultSet rset = query.executeQuery();
 				if (rset.next()) {
@@ -210,7 +210,7 @@ public class SkiPassHandler {
             }
 		boolean expired = expDate.compareTo(today2) < 0;
 		if (expired || curval == 0) {
-			try (PreparedStatement query2 = dbconn.prepareStatement("Delete From group14.Pass Where passID = ?")) {
+			try (PreparedStatement query2 = dbconn.prepareStatement("Delete From nathanlamont.Pass Where passID = ?")) {
 					update(dbconn, "delete", passID);
 					query2.setString(1, passID);
 					query2.executeUpdate();
@@ -245,7 +245,7 @@ public class SkiPassHandler {
   *-------------------------------------------------------------------*/
 	public static void update(Connection dbconn, String edit, String pk) {
 		LocalDate today = LocalDate.now();
-		try (PreparedStatement query = dbconn.prepareStatement("Insert Into group14.Updates (updateType, tableChanged, changeID, dateTime) Values (?, ?, ?, ?)")) {
+		try (PreparedStatement query = dbconn.prepareStatement("Insert Into nathanlamont.Updates (updateType, tableChanged, changeID, dateTime) Values (?, ?, ?, ?)")) {
                 query.setString(1, edit);
 				query.setString(2, "Pass");
 				query.setString(3, pk);

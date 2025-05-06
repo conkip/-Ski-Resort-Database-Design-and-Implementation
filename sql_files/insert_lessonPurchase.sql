@@ -1,4 +1,4 @@
-INSERT INTO group14.LessonPurchase VALUES (
+INSERT INTO nathanlamont.LessonPurchase VALUES (
     301,
     1,
     101,
@@ -7,7 +7,7 @@ INSERT INTO group14.LessonPurchase VALUES (
     250.00
 );
 
-INSERT INTO group14.LessonPurchase VALUES (
+INSERT INTO nathanlamont.LessonPurchase VALUES (
     302,
     4,
     102,
@@ -16,7 +16,7 @@ INSERT INTO group14.LessonPurchase VALUES (
     180.00
 );
 
-INSERT INTO group14.LessonPurchase VALUES (
+INSERT INTO nathanlamont.LessonPurchase VALUES (
     303,
     3,
     102,

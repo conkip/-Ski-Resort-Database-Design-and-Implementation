@@ -1,4 +1,4 @@
-INSERT INTO group14.LessonOffering VALUES (
+INSERT INTO nathanlamont.LessonOffering VALUES (
     101,
     'E001',
     'Ski',
@@ -6,7 +6,7 @@ INSERT INTO group14.LessonOffering VALUES (
     'Mon-Wed 10:00'
 );
 
-INSERT INTO group14.LessonOffering VALUES (
+INSERT INTO nathanlamont.LessonOffering VALUES (
     102,
     'E002',
     'Snowboard',

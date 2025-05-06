@@ -51,7 +51,7 @@ public class LessonPurchaseHandler {
 
   public static void displayAllPurchases(Connection dbconn) {
     // SQL query to select all lesson purchases
-    String query = "SELECT * FROM group14.LessonPurchase ORDER BY orderID";
+    String query = "SELECT * FROM nathanlamont.LessonPurchase ORDER BY orderID";
 
     // Execute the query and display results
     try (Statement stmt = dbconn.createStatement();
@@ -114,7 +114,7 @@ public class LessonPurchaseHandler {
     // Ensure the orderID is unique
     while (!unique) {
       try (Statement stmt = dbconn.createStatement()) {
-        String checkSQL = "SELECT orderID FROM group14.LessonPurchase WHERE orderID = " + orderID;
+        String checkSQL = "SELECT orderID FROM nathanlamont.LessonPurchase WHERE orderID = " + orderID;
         ResultSet rset = stmt.executeQuery(checkSQL);
         if (!rset.next()) {
           unique = true; // Unique orderID found
@@ -129,7 +129,7 @@ public class LessonPurchaseHandler {
     // Insert the new lesson purchase into the database
     try (Statement stmt = dbconn.createStatement()) {
       String sql =
-          "INSERT INTO group14.LessonPurchase (orderID, memberID, lessonID, "
+          "INSERT INTO nathanlamont.LessonPurchase (orderID, memberID, lessonID, "
               + "sessionsPurchased, remainingSessions, price) VALUES ("
               + orderID
               + ", "
@@ -174,7 +174,7 @@ public class LessonPurchaseHandler {
     try (Statement stmt = dbconn.createStatement()) {
       // Check if the order ID exists and get the remaining sessions
       String checkSQL =
-          "SELECT remainingSessions FROM group14.LessonPurchase WHERE orderID = " + orderID;
+          "SELECT remainingSessions FROM nathanlamont.LessonPurchase WHERE orderID = " + orderID;
       ResultSet rset = stmt.executeQuery(checkSQL);
 
       // If the order ID exists, update the remaining sessions
@@ -185,7 +185,7 @@ public class LessonPurchaseHandler {
         // If remaining sessions are greater than 0, decrement by 1
         if (remaining > 0) {
           String updateSQL =
-              "UPDATE group14.LessonPurchase SET remainingSessions = "
+              "UPDATE nathanlamont.LessonPurchase SET remainingSessions = "
                   + (remaining - 1)
                   + " WHERE orderID = "
                   + orderID;
@@ -229,7 +229,7 @@ public class LessonPurchaseHandler {
     try (Statement stmt = dbconn.createStatement()) {
       // Check if the order ID exists
       String sql =
-          "UPDATE group14.LessonPurchase SET remainingSessions = "
+          "UPDATE nathanlamont.LessonPurchase SET remainingSessions = "
               + newRemaining
               + " WHERE orderID = "
               + orderID;
@@ -238,7 +238,7 @@ public class LessonPurchaseHandler {
       if (updated > 0) {
         // Log update
         String logSQL =
-            "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+            "INSERT INTO nathanlamont.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
                 + "'update', 'LessonPurchase', '"
                 + orderID
                 + "', SYSDATE)";
@@ -277,7 +277,7 @@ public class LessonPurchaseHandler {
     try (Statement stmt = dbconn.createStatement()) {
       // Check if the order ID exists and get the remaining sessions
       String checkSQL =
-          "SELECT remainingSessions FROM group14.LessonPurchase WHERE orderID = " + orderID;
+          "SELECT remainingSessions FROM nathanlamont.LessonPurchase WHERE orderID = " + orderID;
       ResultSet rset = stmt.executeQuery(checkSQL);
       if (rset.next()) {
         // Get the number of remaining sessions
@@ -288,12 +288,12 @@ public class LessonPurchaseHandler {
 
         if (remaining == rset.getInt("sessionsPurchased")) {
           // Delete the lesson purchase record
-          String deleteSQL = "DELETE FROM group14.LessonPurchase WHERE orderID = " + orderID;
+          String deleteSQL = "DELETE FROM nathanlamont.LessonPurchase WHERE orderID = " + orderID;
           stmt.executeUpdate(deleteSQL);
 
           // Log delete
           String logSQL =
-              "INSERT INTO group14.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
+              "INSERT INTO nathanlamont.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
                   + "'delete', 'LessonPurchase', '"
                   + orderID
                   + "', SYSDATE)";
