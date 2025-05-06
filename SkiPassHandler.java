@@ -3,8 +3,49 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
+/*+----------------------------------------------------------------------
+||  Class MemberHandler
+||
+||         Author:  Group 14 – Connor, Luis, Mohammad, Nathan
+||
+||        Purpose:  Provides static methods to manage ski passes
+||                  in the ski resort system. Supports adding,
+||                  updating, and deleting members.
+||
+||  Inherits From:  None
+||
+||     Interfaces:  None
+||
+||   Constructors:  None (static utility class)
+||
+||  Class Methods:
+||       void addPass(Connection dbconn)
+||
+||       void updatePass(Connection dbconn)
+||
+||       void deletePass(Connection dbconn)
+++-----------------------------------------------------------------------*/
 public class SkiPassHandler {
 
+
+  /*---------------------------------------------------------------------
+  |  Method addPass
+  |
+  |  Purpose: Adds a new ski pass and assigns a new pass ID based on how many there
+  |           currently are.
+  |
+  |  Pre-condition:
+  |     - `dbconn` must be valid and open.
+  |
+  |  Post-condition:
+  |     - A new record is inserted into the `Pass` table.
+  |
+  |  Parameters:
+  |     dbconn              -- Active JDBC connection.
+  |
+  |
+  |  Returns: None.
+  *-------------------------------------------------------------------*/
 	public static void addPass(Connection dbconn) {
 		String memID;
 		int numUses;
@@ -70,36 +111,54 @@ public class SkiPassHandler {
             }
 	}
 
+
+  /*---------------------------------------------------------------------
+  |  Method updatePass
+  |
+  |  Purpose: Changes the value of the remaining uses of a ski pass by a specified amount.
+  |
+  |  Pre-condition:
+  |     - `dbconn` must be valid and open.
+  |
+  |  Post-condition:
+  |     - A record's numUses attributed is updated in the 'Pass' table.
+  |
+  |  Parameters:
+  |     dbconn              -- Active JDBC connection.
+  |
+  |  Returns: None.
+  *-------------------------------------------------------------------*/
 	public static void updatePass(Connection dbconn) {
 		String passID;
 		int curval = 0;
-                int val;
+        int val;
 		try (Scanner sc = new Scanner(System.in)) {
-                    System.out.print("Enter Member ID of Pass: ");
-                    passID = sc.nextLine();
-                    String query = "Select numUses from group14.Pass Where passID = ?";
-                    try (PreparedStatement query2 = dbconn.prepareStatement(query)) {
-                        query2.setString(1, passID);
-                        ResultSet rset = query2.executeQuery();
-                        if (rset.next()) {
-                            curval = rset.getInt("numUses");
-                        }
-                    } catch (SQLException ex) {
-                        System.out.println("Error: Could not connect to database");
-                    }
-                    System.out.println("Current Remaining Uses for Pass " + passID + ": " + curval);
-                    System.out.print("\nIncrease Remaining Uses by: ");
-                val = 0;
-                try {
-                    val = Integer.parseInt(sc.nextLine());
-                } catch (NumberFormatException e) {
-                    System.out.println("Error: Invalid number.");
-                    return;
-                }
+            System.out.print("Enter Member ID of Pass: ");
+            passID = sc.nextLine();
+            String query = "Select numUses from group14.Pass Where passID = ?";
+            try (PreparedStatement query2 = dbconn.prepareStatement(query)) {
+                query2.setString(1, passID);
+                ResultSet rset = query2.executeQuery();
+					if (rset.next()) {
+						curval = rset.getInt("numUses");
+					}
+				} catch (SQLException ex) {
+					System.out.println("Error: Could not connect to database");
+				}
+				System.out.println("Current Remaining Uses for Pass " + passID + ": " + curval);
+				System.out.print("\nIncrease Remaining Uses by: ");
+			val = 0;
+			try {
+				val = Integer.parseInt(sc.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println("Error: Invalid number.");
+				return;
+			}
 		}
 		if (val + curval >= 0) {
 			String query3 = "Update group14.Pass Set numUses = numUses + ? Where passID = ?";
 			try (PreparedStatement update = dbconn.prepareStatement(query3)) {
+				update(dbconn, "update", passID);
                 update.setInt(1, val);
                 update.setString(2, passID);
 				update.executeUpdate();
@@ -113,6 +172,23 @@ public class SkiPassHandler {
 		}
 	}
 
+  /*---------------------------------------------------------------------
+  |  Method deletePass
+  |
+  |  Purpose: Removes a ski pass from the 'Pass' table if it has expired or has no more uses.
+  |
+  |  Pre-condition:
+  |     - `dbconn` must be valid and open.
+  |
+  |  Post-condition:
+  |     - A record is deleted from the Pass table.
+  |
+  |  Parameters:
+  |     dbconn              -- Active JDBC connection.
+  |
+  |
+  |  Returns: None.
+  *-------------------------------------------------------------------*/
 	public static void deletePass(Connection dbconn) {
 		String passID;
 		Scanner sc = new Scanner(System.in);
@@ -135,6 +211,7 @@ public class SkiPassHandler {
 		boolean expired = expDate.compareTo(today2) < 0;
 		if (expired || curval == 0) {
 			try (PreparedStatement query2 = dbconn.prepareStatement("Delete From group14.Pass Where passID = ?")) {
+					update(dbconn, "delete", passID);
 					query2.setString(1, passID);
 					query2.executeUpdate();
 					System.out.println("Successfully deleted Ski Pass " + passID);
@@ -145,5 +222,37 @@ public class SkiPassHandler {
 		else {
 			System.out.println("Error: Only Expired or Useless passes can be deleted.");
 		}
+	}
+
+  /*---------------------------------------------------------------------
+  |  Method update
+  |
+  |  Purpose: Logs any updates or deletions to the 'Updates' table.
+  |
+  |  Pre-condition:
+  |     - `dbconn` must be valid and open.
+  |		- Parameters must be valid.
+  |
+  |  Post-condition:
+  |     - A record is entered into the 'Updates' table.
+  |
+  |  Parameters:
+  |     dbconn              -- Active JDBC connection.
+  |		edit				-- The type of edit that is being done on the 'Pass' table.
+  |		pk					-- The primary key of the pass being updated or deleted.
+  |
+  |  Returns: None.
+  *-------------------------------------------------------------------*/
+	public static void update(Connection dbconn, String edit, String pk) {
+		LocalDate today = LocalDate.now();
+		try (PreparedStatement query = dbconn.prepareStatement("Insert Into group14.Updates (updateType, tableChanged, changeID, dateTime) Values (?, ?, ?, ?)")) {
+                query.setString(1, edit);
+				query.setString(2, "Pass");
+				query.setString(3, pk);
+				query.setDate(4, java.sql.Date.valueOf(today));
+                query.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println("SQL Update Error: " + ex.getMessage());
+            }
 	}
 }

@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.Date;
 
 /*+----------------------------------------------------------------------
 ||  Class DML
@@ -243,6 +242,22 @@ public class DML {
     }
   }
 
+  /*---------------------------------------------------------------------
+  |  Method skiPasses
+  |
+  |  Purpose: Displays data management options to user and calls methods of the handler
+  |           for whichever option they chose.
+  |
+  |  Pre-condition:
+  |     - `dbconn` must be valid and open.
+  |
+  |  Post-condition:
+  |     - the SkiPassHandler class is called and user manages data.
+  |
+  |  Parameters: None
+  |
+  |  Returns: None.
+  *-------------------------------------------------------------------*/
   private void skiPasses() {
 	  System.out.println("- Ski Pass Management -");
 	  System.out.println("1) Add new Ski Pass.");
