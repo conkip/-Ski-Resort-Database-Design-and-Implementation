@@ -184,6 +184,7 @@ public class DML {
       } else if (choice == 2) {
         System.out.println("Enter the member ID of the membership you would like to update:");
         int memberID = scanner.nextInt();
+        scanner.nextLine();
 
         System.out.println("\nWhat would you like to update:");
         System.out.println("1. Phone Number");
@@ -226,6 +227,7 @@ public class DML {
       } else if (choice == 3) {
         System.out.println("Enter the memberID for the account you would like to delete:");
         int memberID = scanner.nextInt();
+        scanner.nextLine(); //get rid of newLine 
 
         MemberHandler.deleteMember(dbconn, memberID);
       } else {
