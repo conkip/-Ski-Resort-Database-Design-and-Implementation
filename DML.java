@@ -66,8 +66,8 @@ public class DML {
   |        is printed and the program continues.
   |
   |  Parameters:
-  |      dbconn -- (IN) a valid JDBC Connection to the Oracle database.
-  |      scanner -- (IN) a Scanner object for reading user input.
+  |      dbconn -- a valid JDBC Connection to the Oracle database.
+  |      scanner -- a Scanner object for reading user input.
   |
   |  Returns:  None.
   *-------------------------------------------------------------------*/
@@ -110,7 +110,9 @@ public class DML {
             + "2) - Ski Passes\n"
             + "3) - Equipment Inventory\n"
             + "4) - Equipment Rentals\n"
-            + "5) - Lessons\n");
+            + "5) - Lessons\n"
+            + "6) - ADMIN - View Update Logs\n"
+            + "7) - Back to Main Menu\n");
 
     try {
       int choice = scanner.nextInt();
@@ -131,6 +133,23 @@ public class DML {
       } else if (choice == 5) {
         // Call method for Lessons
         lessons();
+      } else if (choice == 6) {
+        // Call method for Update Logs
+        // Admin access only
+        System.out.println("Do you promise you are an admin? (yes/no): ");
+        String input = scanner.nextLine().trim().toLowerCase();
+        if (input.equals("yes") || input.equals("y")) {
+          System.out.println("Welcome Admin!");
+          updateLogSummary();
+        } else {
+          System.out.println("You are not an admin. Goodbye.");
+          return;
+        }
+
+      }
+      else if (choice == 7) {
+        // Go back to the main menu
+        return;
       } else {
         System.out.println("Invalid choice. Please try again.");
       }
@@ -146,10 +165,17 @@ public class DML {
     try {
       System.out.print("Welcome, to the membership portal!");
 
+      System.out.print("Would you like to view a summary of all members? (yes/no): ");
+      String input = scanner.nextLine().trim().toLowerCase();
+      if (input.equals("yes") || input.equals("y")) {
+        MemberHandler.displayAllMembers(dbconn);
+      }
+
       System.out.println("\nChoose an action:");
       System.out.println("1. Register a member");
       System.out.println("2. Update existing member's information");
       System.out.println("3. Delete a memebership");
+      System.out.println("4. Back to Main Menu");
       System.out.print("Enter your choice: ");
 
       int choice = scanner.nextInt();
@@ -174,8 +200,15 @@ public class DML {
         try {
           LocalDate dateBirth = LocalDate.parse(dob);
 
-          MemberHandler.addMember(dbconn, name, phoneNumber, email, dateBirth, 
-                  emergencyName, emergencyPhone, emergencyEmail);
+          MemberHandler.addMember(
+              dbconn,
+              name,
+              phoneNumber,
+              email,
+              dateBirth,
+              emergencyName,
+              emergencyPhone,
+              emergencyEmail);
         } catch (Exception e) {
           System.out.println("Invalid date format. Please use YYYY-MM-DD.");
           members(); // Retry
@@ -198,16 +231,14 @@ public class DML {
         if (choice == 1) {
           System.out.println("Enter new phone number:");
           String newPhone = scanner.nextLine();
-          
-          MemberHandler.updateMember(dbconn, memberID, newPhone, null, 
-                null, null, null);
-        } else if(choice == 2) {
+
+          MemberHandler.updateMember(dbconn, memberID, newPhone, null, null, null, null);
+        } else if (choice == 2) {
           System.out.println("Enter new email:");
           String newEmail = scanner.nextLine();
-          
-          MemberHandler.updateMember(dbconn, memberID, null, newEmail, 
-                null, null, null);
-        } else if(choice == 3) {
+
+          MemberHandler.updateMember(dbconn, memberID, null, newEmail, null, null, null);
+        } else if (choice == 3) {
           System.out.println("Enter your emergency contact's name (first and last):");
           String newEmergencyName = scanner.nextLine();
 
@@ -216,9 +247,9 @@ public class DML {
 
           System.out.println("Enter your emergency contact's email:");
           String newEmergencyEmail = scanner.nextLine();
-          
-          MemberHandler.updateMember(dbconn, memberID, null, null, 
-                newEmergencyName, newEmergencyPhone, newEmergencyEmail);
+
+          MemberHandler.updateMember(
+              dbconn, memberID, null, null, newEmergencyName, newEmergencyPhone, newEmergencyEmail);
         } else {
           System.out.println("Invalid choice.");
           members();
@@ -227,9 +258,12 @@ public class DML {
       } else if (choice == 3) {
         System.out.println("Enter the memberID for the account you would like to delete:");
         int memberID = scanner.nextInt();
-        scanner.nextLine(); //get rid of newLine 
+        scanner.nextLine(); // get rid of newLine
 
         MemberHandler.deleteMember(dbconn, memberID);
+      } else if (choice == 4) {
+        // Go back to the main menu
+        return;
       } else {
         System.out.println("Invalid choice.");
         members();
@@ -257,32 +291,39 @@ public class DML {
   |  Returns: None.
   *-------------------------------------------------------------------*/
   private void skiPasses() {
-	  System.out.println("- Ski Pass Management -");
-	  System.out.println("1) Add new Ski Pass.");
-	  System.out.println("2) Update Usage Information on a Ski Pass.");
-	  System.out.println("3) Remove a Ski Pass.");
-	  
-	  try (Scanner sc = new Scanner(System.in)) {
-			System.out.print("Select an option or type 'Quit' to exit: ");
-			while (true) {
-				String choice = sc.nextLine();
-				if (choice.equals("1")) {
-					
-					SkiPassHandler.addPass(dbconn);
-					return;
-				} else if (choice.equals("2")) {
-					SkiPassHandler.updatePass(dbconn);
-					return;
-				} else if (choice.equals("3")) {
-					SkiPassHandler.deletePass(dbconn);
-					return;
-				} 
-				else if (choice.equals("Quit") || choice.equals("quit")) {
-					return;
-				} else
-					System.out.println("Invalid Input, Try Again.");
-			}
-		}
+    System.out.println("- Ski Pass Management -");
+
+    System.out.print("Would you like to view a summary of ski passes? (yes/no): ");
+    String input = scanner.nextLine().trim().toLowerCase();
+    if (input.equals("yes") || input.equals("y")) {
+      SkiPassHandler.displayPasses(dbconn);
+    }
+
+    System.out.println("1) Add new Ski Pass.");
+    System.out.println("2) Update Usage Information on a Ski Pass.");
+    System.out.println("3) Remove a Ski Pass.");
+    System.out.println("4) Back to Main Menu.");
+    System.out.print("Enter your choice: ");
+
+    try {
+      // Read the user's choice
+      int choice = scanner.nextInt();
+
+      if (choice == 1) {
+        SkiPassHandler.addPass(dbconn);
+      } else if (choice == 2) {
+        SkiPassHandler.updatePass(dbconn);
+      } else if (choice == 3) {
+        SkiPassHandler.deletePass(dbconn);
+      } else if (choice == 4) {
+        return;
+      } else {
+        System.out.println("Invalid Input, Try Again.");
+      }
+    } catch (InputMismatchException e) {
+      System.out.println("Invalid input. Please enter a number.");
+      scanner.nextLine(); // Clear the invalid input
+    }
   }
 
   /*---------------------------------------------------------------------
@@ -315,6 +356,7 @@ public class DML {
       System.out.println("1. Add new equipment");
       System.out.println("2. Update existing equipment");
       System.out.println("3. Delete/Archive equipment");
+      System.out.println("4. Back to Main Menu");
       System.out.print("Enter your choice: ");
 
       int choice = scanner.nextInt();
@@ -342,9 +384,12 @@ public class DML {
         int id = scanner.nextInt();
         scanner.nextLine();
         EquipmentInventoryHandler.archiveEquipment(dbconn, id);
-
+      } else if (choice == 4) {
+        // Go back to the main menu
+        return;
       } else {
         System.out.println("Invalid choice.");
+        equipmentInventory(); // Retry
       }
 
     } catch (InputMismatchException e) {
@@ -385,6 +430,7 @@ public class DML {
       System.out.println("1. Add new rental");
       System.out.println("2. Update return status");
       System.out.println("3. Delete rental");
+      System.out.println("4. Back to Main Menu");
       System.out.print("Enter your choice: ");
 
       int choice = scanner.nextInt();
@@ -423,8 +469,12 @@ public class DML {
 
         RentalHandler.deleteRental(dbconn, rentalID);
 
+      } else if (choice == 4) {
+        // Go back to the main menu
+        return;
       } else {
         System.out.println("Invalid choice.");
+        equipmentRentals(); // Retry
       }
 
     } catch (InputMismatchException e) {
@@ -463,6 +513,7 @@ public class DML {
       System.out.println("2. Update remaining sessions");
       System.out.println("3. Record a session usage");
       System.out.println("4. Delete a lesson purchase");
+      System.out.println("5. Back to Main Menu");
       System.out.print("Enter your choice: ");
 
       int choice = scanner.nextInt();
@@ -508,6 +559,8 @@ public class DML {
 
         LessonPurchaseHandler.deletePurchase(dbconn, orderID);
 
+      } else if (choice == 5) { // Back to main menu
+        return;
       } else {
         System.out.println("Invalid choice.");
       }
@@ -515,6 +568,50 @@ public class DML {
     } catch (InputMismatchException e) {
       System.out.println("Invalid input. Please enter the correct data type.");
       scanner.nextLine(); // clear the buffer
+    }
+  }
+
+  /*---------------------------------------------------------------------
+  |  Method updateLogSummary
+  |
+  |  Purpose:  Displays all records from the Updates table.
+  |
+  |  Pre-condition:
+  |     - `dbconn` must be valid and open.
+  |     - `Updates` table must exist and be populated.
+  |
+  |  Post-condition:
+  |     - Prints update logs to standard output.
+  |
+  |  Parameters: None
+  |
+  |  Returns: None
+  *-------------------------------------------------------------------*/
+  private void updateLogSummary() {
+    // get the update logs from the database
+    // and print them to the console
+    String query =
+        "SELECT updateType, tableChanged, changeID, dateTime "
+            + "FROM nathanlamont.Updates ORDER BY dateTime DESC";
+
+    try (Statement stmt = dbconn.createStatement();
+        ResultSet rset = stmt.executeQuery(query)) {
+
+      // Print the header
+      System.out.println("\n--- Update & Delete Log ---");
+      System.out.printf("%-10s %-20s %-15s %-15s\n", "Action", "Table", "Change ID", "Date");
+
+      while (rset.next()) {
+        // Get the values from the result set
+        String type = rset.getString("updateType");
+        String table = rset.getString("tableChanged");
+        String changeID = rset.getString("changeID");
+        String date = rset.getDate("dateTime").toString();
+
+        System.out.printf("%-10s %-20s %-15s %-15s\n", type, table, changeID, date);
+      }
+    } catch (SQLException e) {
+      System.err.println("SQL Error while retrieving update logs: " + e.getMessage());
     }
   }
 }

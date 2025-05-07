@@ -103,6 +103,17 @@ public class RentalHandler {
         return;
       }
 
+      // check if the pass ID exists and is not expired
+      String checkPassSQL =
+          "SELECT COUNT(*) FROM nathanlamont.Pass WHERE passID = '"
+              + passID
+              + "' AND exprDate > SYSDATE";
+      ResultSet checkPassRset = stmt.executeQuery(checkPassSQL);
+      if (checkPassRset.next() && checkPassRset.getInt(1) == 0) {
+        System.out.println("Cannot add rental. Pass ID does not exist or is expired.");
+        return;
+      }
+
       // Create a rental ID
       Random rand = new Random();
       int rentalID = rand.nextInt(1000000); // Generate a random rental ID

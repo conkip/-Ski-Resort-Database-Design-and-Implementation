@@ -82,78 +82,124 @@ This design reflects a direct and normalized translation of the conceptual model
 \end{itemize}
 
 \section{Normalization analysis}
+\section*{Normalization Analysis}
 
-These all adhere to 1NF as all set attributes are non set values. Also, they all adhere to 2NF 
-because all non-prime attributes are fully functionally dependant on the candidate keys.
+All relations in the schema adhere to the First Normal Form (1NF) as all attributes are not set values. 
+They also conform to the Second Normal Form (2NF) since all non-prime attributes are fully functionally dependent on the candidate key(s). 
+Below, we analyze each relation for Boyce-Codd Normal Form (BCNF) or the Third Normal Form (3NF).
 
-Property( propertyID, name, address, propertyType )
-FDs: propertyID -> name, propertyID -> adress, propertyID -> propertyType
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{1. \texttt{Property(propertyID, name, address, propertyType)}}
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Functional Dependencies:}
+    \begin{align*}
+      \text{propertyID} &\rightarrow \text{name, address, propertyType}
+    \end{align*}
+  \item \textbf{Candidate Key:} propertyID
+  \item \textbf{BCNF Status:} \textit{Yes}, all functional dependencies have a superkey on the left-hand side.
+\end{itemize}
 
-Shop( shopID, name, type, buildingID, income )
-FDs: shopID -> name, shopID -> type, shopID -> buildingID, shopID -> income
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{2. \texttt{Shop(shopID, name, type, buildingID, income)}}
+\begin{itemize}
+  \item \textbf{FDs:} shopID $\rightarrow$ name, type, buildingID, income
+  \item \textbf{PK:} shopID
+  \item \textbf{BCNF:} Yes because all attributes are functionally dependent on the primary key.
+\end{itemize}
 
-Equipment( equipmentID, type, size, archived )
-FDs: equipmentID -> type, equipmentID -> size, equipmentID -> archived
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{3. \texttt{Equipment(equipmentID, type, size, archived)}}
+\begin{itemize}
+  \item \textbf{FDs:} equipmentID $\rightarrow$ type, size, archived
+  \item \textbf{PK:} equipmentID
+  \item \textbf{BCNF:} Yes, all attributes are functionally dependent on the primary key.
+\end{itemize}
 
-Rental( rentalID, equipmentID, passID, rentalTime, returnStatus )
-FDs: rentalID -> equipmentID, rentalID -> passID, rentalID -> rentalTime, rentalID -> rentalStatus
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{4. \texttt{Rental(rentalID, equipmentID, passID, rentalTime, returnStatus)}}
+\begin{itemize}
+  \item \textbf{FDs:} rentalID $\rightarrow$ equipmentID, passID, rentalTime, returnStatus
+  \item \textbf{PK:} rentalID
+  \item \textbf{BCNF:} Yes 
+\end{itemize}
 
-Pass( passID, memberID, numUses, passType, price, exprDate )
-FDs: passID -> memberID, passID -> numUses, passID -> passType, passID -> price, passID -> exprDate
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{5. \texttt{Pass(passID, memberID, numUses, passType, price, exprDate)}}
+\begin{itemize}
+  \item \textbf{FDs:} passID $\rightarrow$ memberID, numUses, passType, price, exprDate
+  \item \textbf{PK:} passID
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-LiftLog( passIDFK, liftID, dateTime )
-FDs: passID -> liftID, passID -> dateTime
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{6. \texttt{LiftLog(passID, liftID, dateTime)}}
+\begin{itemize}
+  \item \textbf{FDs:} (passID, liftID, dateTime) is the composite key; no partial dependencies.
+  \item \textbf{PK:} Composite (passID, liftID, dateTime)
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-Lift( liftID, liftName, openTime, closeTime, abilityLevel, status )
-FDs: liftID -> liftName, liftID -> openTime, liftID -> closeTime, liftID -> abilityLevel, liftID -> status
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{7. \texttt{Lift(liftID, liftName, openTime, closeTime, abilityLevel, status)}}
+\begin{itemize}
+  \item \textbf{FDs:} liftID $\rightarrow$ liftName, openTime, closeTime, abilityLevel, status
+  \item \textbf{PK:} liftID
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-TrailLift( liftID, trailName )
-FDs: liftID -> trailName
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{8. \texttt{TrailLift(liftID, trailName)}}
+\begin{itemize}
+  \item \textbf{FDs:} Composite PK (liftID, trailName); no non-prime attributes
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-Trail( name, category, start, end, status, difficulty )
-FDs: name -> category, name -> start, name -> end, name -> status, name -> difficulty
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{9. \texttt{Trail(name, category, start, end, status, difficulty)}}
+\begin{itemize}
+  \item \textbf{FDs:} name $\rightarrow$ category, start, end, status, difficulty
+  \item \textbf{PK:} name
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-Member( memberID, name, phoneNumber, email, dateBirth, emergencyName, emergencyPhone, emergencyEmail )
-FDs: memberID -> name, memberID -> phoneNumber, memberID -> email, memberID -> dataBirth,
-     memberID -> emergencyName, memberID -> emergencyPhone, memberID -> emergencyEmail
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{10. \texttt{Member(memberID, name, phoneNumber, email, dateBirth, emergencyName, emergencyPhone, emergencyEmail)}}
+\begin{itemize}
+  \item \textbf{FDs:} memberID $\rightarrow$ all other attributes
+  \item \textbf{PK:} memberID
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-LessonLog( orderID, dateTime )
-FDs: orderID -> dateTime
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{11. \texttt{LessonLog(orderID, dateTime)}}
+\begin{itemize}
+  \item \textbf{FDs:} orderID $\rightarrow$ dateTime
+  \item \textbf{PK:} orderID
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-LessonPurchase( orderID, memberID, lessonID, sessionsPurchased, remainingSessions, price )
-FDs: orderID -> memberID, orderID -> lessonID, orderID -> sessionsPurchased, orderID -> remainingSessions,
-     orderID -> price
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{12. \texttt{LessonPurchase(orderID, memberID, lessonID, sessionsPurchased, remainingSessions, price)}}
+\begin{itemize}
+  \item \textbf{FDs:} orderID $\rightarrow$ memberID, lessonID, sessionsPurchased, remainingSessions, price
+  \item \textbf{PK:} orderID
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-LessonOffering( lessonID, instructorID, type, level, schedule )
-FDs: lessonID -> instructorID, lessonID -> type, lessonID -> level, lessonID -> schedule
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{13. \texttt{LessonOffering(lessonID, instructorID, lessonType, skillLevel, schedule)}}
+\begin{itemize}
+  \item \textbf{FDs:} lessonID $\rightarrow$ instructorID, lessonType, skillLevel, schedule
+  \item \textbf{PK:} lessonID
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-Employee( employeeID, name, phone, email, position, monthlySalary, startDate,
-gender, ethnicity, dateBirth, propertyIDFK )
-FDs: employeeID -> name, employeeID -> phone, employeeID -> email, employeeID -> position,
-     employeeID -> monthlySalary, employeeID -> startDate
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{14. \texttt{Employee(employeeID, name, phone, email, position, monthlySalary, startDate, gender, ethnicity, dateBirth, propertyID)}}
+\begin{itemize}
+  \item \textbf{FDs:} employeeID $\rightarrow$ all other attributes
+  \item \textbf{PK:} employeeID
+  \item \textbf{BCNF:} Yes
+\end{itemize}
 
-Updates( updateType, tableChanged, changeID, dateTime )
-FDs: dateTime -> updateType, dateTime -> tableChanged, dateTime -> changeID
-This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+\subsection*{15. \texttt{Updates(updateType, tableChanged, changeID, dateTime)}}
+\begin{itemize}
+  \item \textbf{FDs:} dateTime $\rightarrow$ updateType, tableChanged, changeID \\
+        \textit{Note:} This assumes that `dateTime` is unique (no two updates occur at the same time).
+  \item \textbf{PK:} A composite key of (updateType, tableChanged, changeID, dateTime) is possible, but not necessary.
+  \item \textbf{BCNF:} Yes.
+\end{itemize}
 
 \section{Query description}
 \subsection{Custom Query: Monthly Income Summary}
 
-\textbf{Query Goal:} Calculate the gross monthly income of the resort by subtracting total employee salaries from the sum of all incomes recorded across the properties.
+\textbf{Query Goal:} Calculate the gross monthly income of the resort by subtracting total employee salaries from the sum of all incomes recorded across the properties or at one specific property.
 
 \textbf{Motivation:} This query helps stakeholders monitor the profitability of the resort’s operations, combining staff payroll and property performance in a single monthly snapshot.
 

@@ -1,9 +1,8 @@
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Date;
-import java.sql.DriverManager;
 import java.time.LocalDate;
 import java.util.Random;
 
@@ -33,6 +32,56 @@ import java.util.Random;
 ||       void deleteMember(Connection dbconn, int memberID)
 ++-----------------------------------------------------------------------*/
 public class MemberHandler {
+
+  /*---------------------------------------------------------------------
+  |  Method displayAllMembers
+  |
+  |  Purpose: Displays all members in the database in a formatted table.
+  |
+  |  Pre-condition:
+  |     - `dbconn` must be valid and open.
+  |
+  |  Post-condition:
+  |     - All members are displayed in a formatted table.
+  |
+  |  Parameters:
+  |     dbconn -- Active JDBC connection.
+  |
+  |  Returns: None.
+  *-------------------------------------------------------------------*/
+  public static void displayAllMembers(Connection dbconn) {
+    // SQL query to select all members
+    String sql = "SELECT * FROM nathanlamont.Member";
+
+    // Execute the query and retrieve the results
+    try (Statement stmt = dbconn.createStatement();
+         ResultSet rset = stmt.executeQuery(sql)) {
+
+      // Print the column headers
+      System.out.printf("%-10s %-25s %-15s %-25s %-15s %-25s %-15s %-25s%n",
+          "Member ID", "Name", "Phone Number", "Email", "Date of Birth", "Emergency Name",
+          "Emergency Phone", "Emergency Email");
+
+      // Print the results
+      while (rset.next()) {
+        int memberID = rset.getInt("memberID");
+        String name = rset.getString("name");
+        String phoneNumber = rset.getString("phoneNumber");
+        String email = rset.getString("email");
+        Date dateBirth = rset.getDate("dateBirth");
+        String emergencyName = rset.getString("emergencyName");
+        String emergencyPhone = rset.getString("emergencyPhone");
+        String emergencyEmail = rset.getString("emergencyEmail");
+
+        System.out.printf("%-10d %-25s %-15s %-25s %-15s %-25s %-15s %-25s%n",
+            memberID, name, phoneNumber, email, dateBirth, emergencyName,
+            emergencyPhone, emergencyEmail);
+      }
+    } catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
+
+  }
 
   /*---------------------------------------------------------------------
   |  Method addMember
