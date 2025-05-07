@@ -360,8 +360,8 @@ public class Queries {
     
     System.out.println("Select desired output: ");
     System.out.println("(1) All properties monthly income ");
-    System.out.println("(2) Profitable property monthly income ");
-    System.out.println("(3) Unprofitable property monthly income ");
+    System.out.println("(2) Select specific property");
+    
     int q4Choice = -1;
     try {
       q4Choice = scanner.nextInt();
@@ -376,6 +376,7 @@ public class Queries {
         "SELECT p.propertyID, p.name, SUM(s.income) AS monthly_income "
             + "FROM nathanlamont.Shop s "
             + "JOIN nathanlamont.Property p ON s.buildingID = p.propertyID "
+            + "Where p.propertyID ="
             + "GROUP BY p.propertyID, p.name "
             + "ORDER BY p.propertyID";
 
@@ -409,19 +410,59 @@ public class Queries {
             System.out.println("Property: " + propertyName + ", Net Income: $" + netIncome);
           });
     } else if (q4Choice == 2) {
-      map.forEach(
-          (propertyName, netIncome) -> {
-            if (netIncome > 0) {
-              System.out.println("Property: " + propertyName + ", Net Income: $" + netIncome);
-            }
-          });
-    } else if (q4Choice == 3) {
-      map.forEach(
-          (propertyName, netIncome) -> {
-            if (netIncome < 0) {
-              System.out.println("Property: " + propertyName + ", Net Income: $" + netIncome);
-            }
-          });
+      System.out.println("Enter property ID to select: ");
+      int propertyID = scanner.nextInt();
+      scanner.nextLine(); // clean newline
+
+      propertySql =
+        "SELECT p.propertyID, p.name, SUM(s.income) AS monthly_income "
+            + "FROM nathanlamont.Shop s "
+            + "JOIN nathanlamont.Property p ON s.buildingID = p.propertyID "
+            + "Where p.propertyID = " + propertyID + " "
+            + "GROUP BY p.propertyID, p.name "
+            + " ORDER BY p.propertyID";
+
+      employeeSql =
+        "SELECT p.propertyID, p.name, SUM(e.monthlySalary) AS monthly_cost "
+            + "FROM nathanlamont.Employee e "
+            + "JOIN nathanlamont.Property p ON e.propertyID = p.propertyID "
+            + "Where p.propertyID = " + propertyID + " "
+            + "GROUP BY p.propertyID, p.name "
+            + "ORDER BY p.propertyID";
+            
+      try {
+        rset = stmt.executeQuery(propertySql);
+        float income = 0;
+        float cost = 0;
+        String propName = "";
+        boolean failed = false;
+        if(rset.next()) {
+          income = rset.getFloat("monthly_income");
+          propName = rset.getString("name");
+        } else {
+          failed = true;
+          System.out.println("No Shop income found for property ID: "+propertyID);
+        }
+
+        rset = stmt.executeQuery(employeeSql);
+        if(rset.next()) {
+          cost = rset.getFloat("monthly_cost");
+        } else {
+          failed = true;
+          System.out.println("No Employee Cost found for property ID: "+propertyID);
+        }
+
+        if(!failed) {
+          float total = income - cost;
+          System.out.println("Name: "+propName+" ID: "+propertyID+" income: "+ total);
+        }
+
+      } catch (SQLException e) {
+        System.err.println("*** SQLException:  " + e.getMessage());
+        System.err.println("\tSQLState:  " + e.getSQLState());
+        System.err.println("\tErrorCode: " + e.getErrorCode());
+      }
+
     } else {
       System.out.println(q4Choice + " Is not a valid choice. Please try again.");
     }
