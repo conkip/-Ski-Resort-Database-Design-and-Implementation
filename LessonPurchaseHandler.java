@@ -277,7 +277,7 @@ public class LessonPurchaseHandler {
     try (Statement stmt = dbconn.createStatement()) {
       // Check if the order ID exists and get the remaining sessions
       String checkSQL =
-          "SELECT remainingSessions FROM nathanlamont.LessonPurchase WHERE orderID = " + orderID;
+          "SELECT remainingSessions, sessionsPurchased FROM nathanlamont.LessonPurchase WHERE orderID = " + orderID;
       ResultSet rset = stmt.executeQuery(checkSQL);
       if (rset.next()) {
         // Get the number of remaining sessions
