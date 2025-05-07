@@ -111,7 +111,8 @@ public class DML {
             + "3) - Equipment Inventory\n"
             + "4) - Equipment Rentals\n"
             + "5) - Lessons\n"
-            + "6) - Back to Main Menu\n");
+            + "6) - ADMIN - View Update Logs\n"
+            + "7) - Back to Main Menu\n");
 
     try {
       int choice = scanner.nextInt();
@@ -133,6 +134,20 @@ public class DML {
         // Call method for Lessons
         lessons();
       } else if (choice == 6) {
+        // Call method for Update Logs
+        // Admin access only
+        System.out.println("Do you promise you are an admin? (yes/no): ");
+        String input = scanner.nextLine().trim().toLowerCase();
+        if (input.equals("yes") || input.equals("y")) {
+          System.out.println("Welcome Admin!");
+          updateLogSummary();
+        } else {
+          System.out.println("You are not an admin. Goodbye.");
+          return;
+        }
+
+      }
+      else if (choice == 7) {
         // Go back to the main menu
         return;
       } else {
@@ -294,7 +309,6 @@ public class DML {
       // Read the user's choice
       int choice = scanner.nextInt();
 
-      
       if (choice == 1) {
         SkiPassHandler.addPass(dbconn);
       } else if (choice == 2) {
@@ -554,6 +568,50 @@ public class DML {
     } catch (InputMismatchException e) {
       System.out.println("Invalid input. Please enter the correct data type.");
       scanner.nextLine(); // clear the buffer
+    }
+  }
+
+  /*---------------------------------------------------------------------
+  |  Method updateLogSummary
+  |
+  |  Purpose:  Displays all records from the Updates table.
+  |
+  |  Pre-condition:
+  |     - `dbconn` must be valid and open.
+  |     - `Updates` table must exist and be populated.
+  |
+  |  Post-condition:
+  |     - Prints update logs to standard output.
+  |
+  |  Parameters: None
+  |
+  |  Returns: None
+  *-------------------------------------------------------------------*/
+  private void updateLogSummary() {
+    // get the update logs from the database
+    // and print them to the console
+    String query =
+        "SELECT updateType, tableChanged, changeID, dateTime "
+            + "FROM nathanlamont.Updates ORDER BY dateTime DESC";
+
+    try (Statement stmt = dbconn.createStatement();
+        ResultSet rset = stmt.executeQuery(query)) {
+
+      // Print the header
+      System.out.println("\n--- Update & Delete Log ---");
+      System.out.printf("%-10s %-20s %-15s %-15s\n", "Action", "Table", "Change ID", "Date");
+
+      while (rset.next()) {
+        // Get the values from the result set
+        String type = rset.getString("updateType");
+        String table = rset.getString("tableChanged");
+        String changeID = rset.getString("changeID");
+        String date = rset.getDate("dateTime").toString();
+
+        System.out.printf("%-10s %-20s %-15s %-15s\n", type, table, changeID, date);
+      }
+    } catch (SQLException e) {
+      System.err.println("SQL Error while retrieving update logs: " + e.getMessage());
     }
   }
 }
