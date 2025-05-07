@@ -83,6 +83,73 @@ This design reflects a direct and normalized translation of the conceptual model
 
 \section{Normalization analysis}
 
+These all adhere to 1NF as all set attributes are non set values. Also, they all adhere to 2NF 
+because all non-prime attributes are fully functionally dependant on the candidate keys.
+
+Property( propertyID, name, address, propertyType )
+FDs: propertyID -> name, propertyID -> adress, propertyID -> propertyType
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+Shop( shopID, name, type, buildingID, income )
+FDs: shopID -> name, shopID -> type, shopID -> buildingID, shopID -> income
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+Equipment( equipmentID, type, size, archived )
+FDs: equipmentID -> type, equipmentID -> size, equipmentID -> archived
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+Rental( rentalID, equipmentID, passID, rentalTime, returnStatus )
+FDs: rentalID -> equipmentID, rentalID -> passID, rentalID -> rentalTime, rentalID -> rentalStatus
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+Pass( passID, memberID, numUses, passType, price, exprDate )
+FDs: passID -> memberID, passID -> numUses, passID -> passType, passID -> price, passID -> exprDate
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+LiftLog( passIDFK, liftID, dateTime )
+FDs: passID -> liftID, passID -> dateTime
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+Lift( liftID, liftName, openTime, closeTime, abilityLevel, status )
+FDs: liftID -> liftName, liftID -> openTime, liftID -> closeTime, liftID -> abilityLevel, liftID -> status
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+TrailLift( liftID, trailName )
+FDs: liftID -> trailName
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+Trail( name, category, start, end, status, difficulty )
+FDs: name -> category, name -> start, name -> end, name -> status, name -> difficulty
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+Member( memberID, name, phoneNumber, email, dateBirth, emergencyName, emergencyPhone, emergencyEmail )
+FDs: memberID -> name, memberID -> phoneNumber, memberID -> email, memberID -> dataBirth,
+     memberID -> emergencyName, memberID -> emergencyPhone, memberID -> emergencyEmail
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+LessonLog( orderID, dateTime )
+FDs: orderID -> dateTime
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+LessonPurchase( orderID, memberID, lessonID, sessionsPurchased, remainingSessions, price )
+FDs: orderID -> memberID, orderID -> lessonID, orderID -> sessionsPurchased, orderID -> remainingSessions,
+     orderID -> price
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+LessonOffering( lessonID, instructorID, type, level, schedule )
+FDs: lessonID -> instructorID, lessonID -> type, lessonID -> level, lessonID -> schedule
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+Employee( employeeID, name, phone, email, position, monthlySalary, startDate,
+gender, ethnicity, dateBirth, propertyIDFK )
+FDs: employeeID -> name, employeeID -> phone, employeeID -> email, employeeID -> position,
+     employeeID -> monthlySalary, employeeID -> startDate
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
+Updates( updateType, tableChanged, changeID, dateTime )
+FDs: dateTime -> updateType, dateTime -> tableChanged, dateTime -> changeID
+This is in BCNF as for all of the FDs X -> Y, X is a superkey (it is the PK)
+
 \section{Query description}
 \subsection{Custom Query: Monthly Income Summary}
 

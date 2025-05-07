@@ -7,8 +7,8 @@
 |   Instructor:  Dr. L. McCann
 |     Due Date:  May 6th, 2025
 |
-|  Compile/Run:  Compile: javac main.java Queries.java DML.java
-|                Run    : java Prog3 <username> <password>
+|  Compile/Run:  Compile: javac Main.java
+|                Run    : java  Main
 +-----------------------------------------------------------------------------
 |  Description:  This program implements the front-end of a two-tier client-server
 |      architecture for a ski resort management system using JDBC and Oracle SQL.

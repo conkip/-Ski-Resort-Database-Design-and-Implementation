@@ -108,10 +108,9 @@ public class DML {
     System.out.println(
         "1) - Members\n"
             + "2) - Ski Passes\n"
-            + "3) - Ski Lessons\n"
-            + "4) - Equipment Inventory\n"
-            + "5) - Equipment Rentals\n"
-            + "6) - Lessons\n");
+            + "3) - Equipment Inventory\n"
+            + "4) - Equipment Rentals\n"
+            + "5) - Lessons\n");
 
     try {
       int choice = scanner.nextInt();
@@ -124,15 +123,12 @@ public class DML {
         // Call method for Ski Passes
         skiPasses();
       } else if (choice == 3) {
-        // Call method for Ski Lessons
-        skiLessons();
-      } else if (choice == 4) {
         // Call method for Equipment Inventory
         equipmentInventory();
-      } else if (choice == 5) {
+      } else if (choice == 4) {
         // Call method for Equipment Rentals
         equipmentRentals();
-      } else if (choice == 6) {
+      } else if (choice == 5) {
         // Call method for Lessons
         lessons();
       } else {
@@ -285,10 +281,6 @@ public class DML {
 					System.out.println("Invalid Input, Try Again.");
 			}
 		}
-  }
-
-  private void skiLessons() {
-    // Implement the logic for Ski Lessons table
   }
 
   /*---------------------------------------------------------------------
