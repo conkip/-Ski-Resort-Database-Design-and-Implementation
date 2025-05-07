@@ -284,7 +284,6 @@ public class DML {
       SkiPassHandler.displayPasses(dbconn);
     }
 
-
     System.out.println("1) Add new Ski Pass.");
     System.out.println("2) Update Usage Information on a Ski Pass.");
     System.out.println("3) Remove a Ski Pass.");
@@ -292,24 +291,22 @@ public class DML {
     System.out.print("Enter your choice: ");
 
     try (Scanner sc = new Scanner(System.in)) {
-      while (true) {
-        String choice = sc.nextLine();
-        if (choice.equals("1")) {
 
-          SkiPassHandler.addPass(dbconn);
-          return;
-        } else if (choice.equals("2")) {
-          SkiPassHandler.updatePass(dbconn);
-          return;
-        } else if (choice.equals("3")) {
-          SkiPassHandler.deletePass(dbconn);
-          return;
-        } else if (choice.equals("4")) {
-          return;
-        } else {
-          System.out.println("Invalid Input, Try Again.");
-        }
-        ;
+      String choice = sc.nextLine();
+      if (choice.equals("1")) {
+
+        SkiPassHandler.addPass(dbconn);
+        return;
+      } else if (choice.equals("2")) {
+        SkiPassHandler.updatePass(dbconn);
+        return;
+      } else if (choice.equals("3")) {
+        SkiPassHandler.deletePass(dbconn);
+        return;
+      } else if (choice.equals("4")) {
+        return;
+      } else {
+        System.out.println("Invalid Input, Try Again.");
       }
     }
   }
