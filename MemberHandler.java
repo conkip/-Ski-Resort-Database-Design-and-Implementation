@@ -60,8 +60,8 @@ public class MemberHandler {
   |  Returns: None.
   *-------------------------------------------------------------------*/
   public static void addMember(
-      Connection dbconn, String name, String phoneNumber, String email, LocalDate dateBirth,
-      String emergencyName, String emergencyPhone, String emergencyEmail) {
+    Connection dbconn, String name, String phoneNumber, String email, LocalDate dateBirth,
+    String emergencyName, String emergencyPhone, String emergencyEmail) {
 
     Random rand = new Random();
     int memberID = rand.nextInt(1000000); // Generate a random order ID
@@ -70,7 +70,7 @@ public class MemberHandler {
     // Ensure the memberID is unique
     while (!unique) {
       try (Statement stmt = dbconn.createStatement()) {
-        String checkSQL = "SELECT memberID FROM nathanlamont.Memeber WHERE memberID = " + memberID;
+        String checkSQL = "SELECT memberID FROM nathanlamont.Member WHERE memberID = " + memberID;
         ResultSet rset = stmt.executeQuery(checkSQL);
         if (!rset.next()) {
           unique = true; // Unique memberID found
@@ -87,21 +87,21 @@ public class MemberHandler {
       String sql =
           "INSERT INTO nathanlamont.Member VALUES ("
               + memberID
-              + ", "
+              + ", '"
               + name
-              + ", "
+              + "'', '"
               + phoneNumber
-              + ", "
+              + "'', '"
               + email
-              + ", "
+              + "'', "
               + "TO_DATE('" + dateBirth + "', 'YYYY-MM-DD')"
-              + ", "
+              + ", '"
               + emergencyName
-              + ", "
+              + "'', '"
               + emergencyPhone
-              + ", "
+              + "'', '"
               + emergencyEmail
-              + ")";
+              + "'')";
 
       stmt.executeUpdate(sql);
       System.out.println("Member added successfully with Member ID: " + memberID);

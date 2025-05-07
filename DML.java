@@ -176,7 +176,7 @@ public class DML {
 
           MemberHandler.addMember(dbconn, name, phoneNumber, email, dateBirth, 
                   emergencyName, emergencyPhone, emergencyEmail);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
           System.out.println("Invalid date format. Please use YYYY-MM-DD.");
           members(); // Retry
         }
