@@ -290,24 +290,25 @@ public class DML {
     System.out.println("4) Back to Main Menu.");
     System.out.print("Enter your choice: ");
 
-    try (Scanner sc = new Scanner(System.in)) {
+    try {
+      // Read the user's choice
+      int choice = scanner.nextInt();
 
-      String choice = sc.nextLine();
-      if (choice.equals("1")) {
-
+      
+      if (choice == 1) {
         SkiPassHandler.addPass(dbconn);
-        return;
-      } else if (choice.equals("2")) {
+      } else if (choice == 2) {
         SkiPassHandler.updatePass(dbconn);
-        return;
-      } else if (choice.equals("3")) {
+      } else if (choice == 3) {
         SkiPassHandler.deletePass(dbconn);
-        return;
-      } else if (choice.equals("4")) {
+      } else if (choice == 4) {
         return;
       } else {
         System.out.println("Invalid Input, Try Again.");
       }
+    } catch (InputMismatchException e) {
+      System.out.println("Invalid input. Please enter a number.");
+      scanner.nextLine(); // Clear the invalid input
     }
   }
 
