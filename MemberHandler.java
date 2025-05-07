@@ -89,19 +89,19 @@ public class MemberHandler {
               + memberID
               + ", '"
               + name
-              + "'', '"
+              + "', '"
               + phoneNumber
-              + "'', '"
+              + "', '"
               + email
-              + "'', "
+              + "', "
               + "TO_DATE('" + dateBirth + "', 'YYYY-MM-DD')"
               + ", '"
               + emergencyName
-              + "'', '"
+              + "', '"
               + emergencyPhone
-              + "'', '"
+              + "', '"
               + emergencyEmail
-              + "'')";
+              + "')";
 
       stmt.executeUpdate(sql);
       System.out.println("Member added successfully with Member ID: " + memberID);
@@ -212,20 +212,26 @@ public class MemberHandler {
   |  Returns: None.
   *-------------------------------------------------------------------*/
   public static void deleteMember(Connection dbconn, int memberID) {
+    String checkSQL = "";
     try (Statement stmt = dbconn.createStatement()) {
       // Check if the order ID exists and get the remaining sessions
-      String checkSQL =
+      checkSQL =
           "SELECT * FROM nathanlamont.Member WHERE memberID = " + memberID;
       ResultSet rset = stmt.executeQuery(checkSQL);
       if (!rset.next()) {
         System.out.println("Member ID not found.");
         return;
       }
-
+    }
+    catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
+      
+    try (Statement stmt = dbconn.createStatement()) {
       // Check for active passes (compare expiration date to current date)
       checkSQL =
           "SELECT exprDate FROM nathanlamont.Pass WHERE memberID = " + memberID;
-      rset = stmt.executeQuery(checkSQL);
+      ResultSet rset = stmt.executeQuery(checkSQL);
 
       LocalDate curDate = LocalDate.now();
 
@@ -241,15 +247,21 @@ public class MemberHandler {
               return;
           }
       }
+    }
+    catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
+
+    try(Statement stmt = dbconn.createStatement()){
 
       // Check for open rental records
       checkSQL =
-          "SELECT returnStatus \n"
-            + "FROM nathanlamont.Pass p lp \n"
-            + "JOIN nathanlamont.Rental r ON p.passID = lp.passID \n"
+          "SELECT r.returnStatus \n"
+            + "FROM nathanlamont.Pass p \n"
+            + "JOIN nathanlamont.Rental r ON p.passID = r.passID \n"
             + "WHERE p.memberID = " + memberID;
 
-      rset = stmt.executeQuery(checkSQL);
+      ResultSet rset = stmt.executeQuery(checkSQL);
 
       while (rset.next()) {
           int returnStatus = rset.getInt("returnStatus");
@@ -257,16 +269,22 @@ public class MemberHandler {
             String message = "Member #" + memberID + " has open rental records."
                           + " Please return all equipment before deleting the membership.";
             System.out.println(message);
+            return;
           }
       }
+    }
+    catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
 
+    try(Statement stmt = dbconn.createStatement()){
       // Check for unused lesson sessions
       checkSQL = 
             "SELECT remainingSessions \n"
-              + "FROM LessonPurchase \n"
-              + "WHERE p.memberID = " + memberID;
+              + "FROM nathanlamont.LessonPurchase \n"
+              + "WHERE memberID = " + memberID;
       
-              rset = stmt.executeQuery(checkSQL);
+      ResultSet rset = stmt.executeQuery(checkSQL);
 
       while (rset.next()) {
           int remainingSessions = rset.getInt("remainingSessions");
@@ -274,13 +292,17 @@ public class MemberHandler {
             String message = "Member #" + memberID + " has remaining lesson sessions left."
                           + " Please finish or cancel all lessons before deleting the membership.";
             System.out.println(message);
+            return;
           }
       }
+    }
+    catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
 
+    String deleteSQL ="";
 
-      // delete member from the table
-      String deleteSQL = "DELETE FROM nathanlamont.Member WHERE memberID = " + memberID;
-      stmt.executeUpdate(deleteSQL);
+    try(Statement stmt = dbconn.createStatement()) {
 
       // delete ski pass data, lift logs, and rental history
 
@@ -290,48 +312,82 @@ public class MemberHandler {
             + "FROM nathanlamont.Pass p \n"
             + "WHERE p.memberID = " + memberID;
 
-      rset = stmt.executeQuery(checkSQL);
+      ResultSet rset = stmt.executeQuery(checkSQL);
 
       while (rset.next()) {
-          int passID = rset.getInt("passID");
+          String passID = rset.getString("passID");
           
-          // delete rental history
-          deleteSQL = "DELETE FROM nathanlamont.Rental WHERE passID = " + passID;
-          stmt.executeUpdate(deleteSQL);
+          try(Statement stmt2 = dbconn.createStatement()){
+            // delete rental history
+            deleteSQL = "DELETE FROM nathanlamont.Rental WHERE passID = '" + passID + "'";
+            stmt2.executeUpdate(deleteSQL);
+          } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+          }
 
-          // delete lift logs
-          deleteSQL = "DELETE FROM nathanlamont.LiftLog WHERE passID = " + passID;
-          stmt.executeUpdate(deleteSQL);
+          try(Statement stmt3 = dbconn.createStatement()) {
+            // delete lift logs
+            deleteSQL = "DELETE FROM nathanlamont.LiftLog WHERE passID = '" + passID + "'";
+            stmt3.executeUpdate(deleteSQL);
+          } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+          }
       }
+    } catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
 
+    try(Statement stmt = dbconn.createStatement()) {
       // delete the pass itslef
       deleteSQL = "DELETE FROM nathanlamont.Pass WHERE memberID = " + memberID;
       stmt.executeUpdate(deleteSQL);
+    } catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
 
-
+    try(Statement stmt = dbconn.createStatement()) {
       // delete lesson transactions
       checkSQL =
           "SELECT orderID \n"
             + "FROM nathanlamont.LessonPurchase lp\n"
             + "WHERE lp.memberID = " + memberID;
 
-      rset = stmt.executeQuery(checkSQL);
+      ResultSet rset = stmt.executeQuery(checkSQL);
 
       while (rset.next()) {
           int orderID = rset.getInt("orderID");
           
-          // delete lesson logs
-          deleteSQL = "DELETE FROM nathanlamont.LessonLog WHERE orderID = " + orderID;
-          stmt.executeUpdate(deleteSQL);
+          try(Statement stmt2 = dbconn.createStatement()){
+            // delete lesson logs
+            deleteSQL = "DELETE FROM nathanlamont.LessonLog WHERE orderID = " + orderID;
+            stmt2.executeUpdate(deleteSQL);
+          } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+          }
       }
+    } catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
 
+    try (Statement stmt = dbconn.createStatement()) {
       // delete the lesson purchase
       deleteSQL = "DELETE FROM nathanlamont.LessonPurchase WHERE memberID = " + memberID;
       stmt.executeUpdate(deleteSQL);
+    } catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
 
+    try(Statement stmt = dbconn.createStatement()){
+      //finally delete the member
+      deleteSQL = "DELETE FROM nathanlamont.Member WHERE memberID = " + memberID;
+      stmt.executeUpdate(deleteSQL);
+    } catch (SQLException e) {
+      System.err.println("SQL Error: " + e.getMessage());
+    }
 
       System.out.println("Member and all related records deleted successfully.");
 
+    try(Statement stmt = dbconn.createStatement()) {
       // Log update
       String logSQL =
           "INSERT INTO nathanlamont.Updates (updateType, tableChanged, changeID, dateTime) VALUES ("
