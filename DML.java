@@ -277,6 +277,14 @@ public class DML {
   *-------------------------------------------------------------------*/
   private void skiPasses() {
     System.out.println("- Ski Pass Management -");
+
+    System.out.print("Would you like to view a summary of ski passes? (yes/no): ");
+    String input = scanner.nextLine().trim().toLowerCase();
+    if (input.equals("yes") || input.equals("y")) {
+      SkiPassHandler.displayPasses(dbconn);
+    }
+
+
     System.out.println("1) Add new Ski Pass.");
     System.out.println("2) Update Usage Information on a Ski Pass.");
     System.out.println("3) Remove a Ski Pass.");
