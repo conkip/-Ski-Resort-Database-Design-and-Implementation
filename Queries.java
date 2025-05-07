@@ -376,7 +376,6 @@ public class Queries {
         "SELECT p.propertyID, p.name, SUM(s.income) AS monthly_income "
             + "FROM nathanlamont.Shop s "
             + "JOIN nathanlamont.Property p ON s.buildingID = p.propertyID "
-            + "Where p.propertyID ="
             + "GROUP BY p.propertyID, p.name "
             + "ORDER BY p.propertyID";
 
