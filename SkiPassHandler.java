@@ -107,6 +107,20 @@ public class SkiPassHandler {
     try (Scanner sc1 = new Scanner(System.in)) {
       System.out.println("Enter Member ID of new Pass: ");
       memID = sc1.nextLine();
+
+      // check if memberID exists in the database
+      String checkMemberID =
+          "SELECT COUNT(*) FROM nathanlamont.Member WHERE memberID = '" + memID + "'";
+      try (Statement stmt = dbconn.createStatement();
+          ResultSet checkRset = stmt.executeQuery(checkMemberID)) {
+        if (checkRset.next() && checkRset.getInt(1) == 0) {
+          System.out.println("Error: Member ID does not exist.");
+          return;
+        }
+      } catch (SQLException ex) {
+        System.out.println("Error: " + ex.getMessage());
+      }
+
       System.out.println("Enter the type of pass: ");
       passType = sc1.nextLine();
       sc1.close();
