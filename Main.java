@@ -25,9 +25,11 @@
 |   Known Bugs:  No known bugs at this time.
 *===========================================================================*/
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /*+----------------------------------------------------------------------
 ||  Class main
@@ -144,17 +146,25 @@ public class Main {
       System.out.println("2. Queries");
       System.out.println("3. Exit");
       System.out.print("Enter your choice: ");
-      int choice = scanner.nextInt();
 
-      if (choice == 1) {
-        dml.performDML();
-      } else if (choice == 2) {
-        queries.performQueries();
-      } else if (choice == 3) {
-        System.out.println("Exiting the program.");
-        break;
-      } else {
-        System.out.println("Invalid choice. Please try again.");
+      try {
+        // read the next integer from the scanner
+        int choice = scanner.nextInt();
+
+        if (choice == 1) {
+          dml.performDML();
+        } else if (choice == 2) {
+          queries.performQueries();
+        } else if (choice == 3) {
+          System.out.println("Exiting the program.");
+          break;
+        } else {
+          System.out.println("Invalid choice. Please try again.");
+        }
+      } catch (InputMismatchException e) { 
+        // if the user enters a non-integer value
+        System.out.println("Invalid input. Please enter a number.");
+        scanner.next(); // Clear the invalid input
       }
     }
 
