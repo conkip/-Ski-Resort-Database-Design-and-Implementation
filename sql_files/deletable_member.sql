@@ -1,82 +1,95 @@
--- Step 1: Insert into Property (new one)
+-- Property
 INSERT INTO nathanlamont.Property (propertyID, name, address, property)
-VALUES (302, 'Cedar Ridge', '321 Forest Drive', 'Cabin');
+VALUES (1, 'Main Lodge', '123 Mountain Rd', 'Building');
 
--- Step 2: Insert into Employee (new instructor at the new property)
-INSERT INTO nathanlamont.Employee (
-    employeeID, name, phone, email, position, monthlySalary, startDate,
-    gender, ethnicity, dateBirth, propertyID
-) VALUES (
-    'EMP401', 'Casey Rivers', '5551234567', 'casey.rivers@resort.com', 'Instructor',
-    5200.00, DATE '2022-11-05', 'Female', 'Hispanic', DATE '1990-07-22', 302
-);
+-- Shop
+INSERT INTO nathanlamont.Shop (shopID, name, shopType, buildingID, income)
+VALUES (1, 'Ski Gear', 'Rental', 1, 5000.00);
 
--- Step 3: Insert into Member
+-- Equipment
+INSERT INTO nathanlamont.Equipment (equipmentID, equipmentType, equipmentSize, archived)
+VALUES (1, 'Ski', 'M', 0);
+
+-- Member
 INSERT INTO nathanlamont.Member (
-    memberID, name, phoneNUMBER, email, dateBirth,
-    emergencyName, emergencyPhone, emergencyEmail
-) VALUES (
-    40002, 'Sage Willow', '5557654321', 'sage.willow@email.com', DATE '1988-10-04',
-    'Rowan Willow', '5559991234', 'rowan.willow@email.com'
+    memberID, name, phoneNumber, email, dateBirth,
+    emergencyName, emergencyPhone, emergencyEmail)
+VALUES (
+    222, 'John Doe', '555-1234', 'johndoe@email.com', TO_DATE('1990-05-20', 'YYYY-MM-DD'),
+    'Jane Doe', '555-5678', 'janedoe@email.com'
 );
 
--- Step 4: Insert into Pass
+-- Pass
 INSERT INTO nathanlamont.Pass (
-    passID, memberID, numUses, passType, price, exprDate
-) VALUES (
-    'PASS40002', 40002, 20, 'Annual', 950.00, DATE '2024-12-31'
+    passID, memberID, numUses, passType, price, exprDate)
+VALUES (
+    'P222', 222, 5, 'Season', 299.99, TO_DATE('2024-12-31', 'YYYY-MM-DD')
 );
 
--- Step 5: Insert into Equipment
-INSERT INTO nathanlamont.Equipment (
-    equipmentID, equipmentType, equipmentSize, archived
-) VALUES (
-    402, 'Snowboard', 'L', 0
-);
-
--- Step 6: Insert into Rental
+-- Rental
 INSERT INTO nathanlamont.Rental (
-    rentalID, equipmentID, passID, rentalTime, returnStatus
-) VALUES (
-    5002, 402, 'PASS40002', DATE '2024-02-10', 1
+    rentalID, equipmentID, passID, rentalTime, returnStatus)
+VALUES (
+    1, 1, 'P222', TO_DATE('2024-12-01', 'YYYY-MM-DD'), 1
 );
 
--- Step 7: Insert into Lift
+-- Lift
 INSERT INTO nathanlamont.Lift (
-    liftID, liftName, openTime, closeTime, abilityLevel, status
-) VALUES (
-    'LIFT1002', 'Eagle Cliff Lift',
-    TIMESTAMP '2025-01-01 08:30:00', TIMESTAMP '2025-01-01 16:30:00',
-    'Advanced', 1
+    liftID, liftName, openTime, closeTime, abilityLevel, status)
+VALUES (
+    'L1', 'Summit Express', TO_TIMESTAMP('08:00:00', 'HH24:MI:SS'),
+    TO_TIMESTAMP('16:00:00', 'HH24:MI:SS'), 'Intermediate', 1
 );
 
--- Step 8: Insert into LiftLog
+-- LiftLog
 INSERT INTO nathanlamont.LiftLog (
-    passID, liftID, dateTime
-) VALUES (
-    'PASS40002', 'LIFT1002', DATE '2025-02-10'
+    passID, liftID, dateTime)
+VALUES (
+    'P222', 'L1', TO_DATE('2024-12-01', 'YYYY-MM-DD')
 );
 
--- Step 9: Insert into LessonOffering
+-- Trail
+INSERT INTO nathanlamont.Trail (
+    name, category, startPos, endPos, status, difficulty)
+VALUES (
+    'Bear Claw', 'Ski', 'Top', 'Base', 1, 'Intermediate'
+);
+
+-- TrailLift
+INSERT INTO nathanlamont.TrailLift (
+    liftID, trailName)
+VALUES (
+    'L1', 'Bear Claw'
+);
+
+-- Employee (Instructor)
+INSERT INTO nathanlamont.Employee (
+    employeeID, name, phone, email, position, monthlySalary,
+    startDate, gender, ethnicity, dateBirth, propertyID)
+VALUES (
+    'E100', 'Alice Smith', '555-9999', 'asmith@email.com', 'Instructor', 4000.00,
+    TO_DATE('2020-06-01', 'YYYY-MM-DD'), 'Female', 'Caucasian', TO_DATE('1985-02-15', 'YYYY-MM-DD'), 1
+);
+
+-- LessonOffering
 INSERT INTO nathanlamont.LessonOffering (
-    lessonID, instructorID, lessonType, skillLevel, schedule
-) VALUES (
-    9002, 'EMP401', 'Freestyle Tricks', 'Advanced', 'Fridays'
+    lessonID, instructorID, lessonType, skillLevel, schedule)
+VALUES (
+    1, 'E100', 'Group', 'Beginner', 'Weekly'
 );
 
--- Step 10: Insert into LessonPurchase
+-- LessonPurchase
 INSERT INTO nathanlamont.LessonPurchase (
-    orderID, memberID, lessonID, sessionsPurchased, remainingSessions, price
-) VALUES (
-    10002, 40002, 9002, 4, 1, 400.00
+    orderID, memberID, lessonID, sessionsPurchased, remainingSessions, price)
+VALUES (
+    1, 222, 1, 5, 0, 150.00
 );
 
--- Step 11: Insert into LessonLog
+-- LessonLog
 INSERT INTO nathanlamont.LessonLog (
-    orderID, dateTime
-) VALUES (
-    10002, DATE '2025-02-14'
+    orderID, dateTime)
+VALUES (
+    1, TO_DATE('2024-12-01', 'YYYY-MM-DD')
 );
 
--- Step 12: Finalize
 COMMIT;
