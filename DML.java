@@ -66,8 +66,8 @@ public class DML {
   |        is printed and the program continues.
   |
   |  Parameters:
-  |      dbconn -- (IN) a valid JDBC Connection to the Oracle database.
-  |      scanner -- (IN) a Scanner object for reading user input.
+  |      dbconn -- a valid JDBC Connection to the Oracle database.
+  |      scanner -- a Scanner object for reading user input.
   |
   |  Returns:  None.
   *-------------------------------------------------------------------*/
@@ -149,6 +149,12 @@ public class DML {
   private void members() {
     try {
       System.out.print("Welcome, to the membership portal!");
+
+      System.out.print("Would you like to view a summary of all members? (yes/no): ");
+      String input = scanner.nextLine().trim().toLowerCase();
+      if (input.equals("yes") || input.equals("y")) {
+        MemberHandler.displayAllMembers(dbconn);
+      }
 
       System.out.println("\nChoose an action:");
       System.out.println("1. Register a member");
