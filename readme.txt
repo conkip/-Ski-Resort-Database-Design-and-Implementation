@@ -1,6 +1,6 @@
 
 **Compilation and execution instructions**
-- clone repo via command line "git clone https://github.com/conkip/Ski-Resort-Database"
+- clone repo via command line "git clone https://github.com/conkip/Ski-Resort-Database" <optional if using .tar>
 - add java drivers via command line "export CLASSPATH=/usr/lib/oracle/19.8/client64/lib/ojdbc8.jar:${CLASSPATH}"
 - compile program via "javac Main.java"
 - run via "java main <username> <password>"
@@ -10,6 +10,7 @@
 **Workload Distribution**
 - Nathan Lamont:
     Query 4;
+    ER Diagram
     Writeups i,ii,iv;
     Table creation, table insertions, data creation
     READMEs
