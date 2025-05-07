@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 import java.util.Scanner;
 
 /*+----------------------------------------------------------------------
@@ -52,8 +53,7 @@ public class SkiPassHandler {
 		String passType;
 		double price;
 		String expDate;
-		int curr = 0;
-		String query1 = "SELECT COUNT(*) AS count FROM nathanlamont.Pass";
+		String passID = "P";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate today = LocalDate.now();
 		
@@ -85,17 +85,23 @@ public class SkiPassHandler {
 				return;
 			}
 		}
-		
 		try (Statement stmt = dbconn.createStatement()) {
-			ResultSet rset = stmt.executeQuery(query1);
-			while (rset.next()) {
-		        curr = rset.getInt("count") + 1;
-		      }
+			Random rand = new Random();
+			passID = "P" + rand.nextInt(1000000); // Generate a random pass ID
+			boolean passIDExists = true;
+			while (passIDExists) {
+				String checkPassID =
+					"SELECT COUNT(*) FROM nathanlamont.pass WHERE passID = '" + passID + "'";
+				ResultSet checkRset = stmt.executeQuery(checkPassID);
+				if (checkRset.next() && checkRset.getInt(1) == 0) {
+				passIDExists = false; // pass ID is unique
+				} else {
+				passID = "P" + rand.nextInt(1000000); // Generate a new random pass ID
+				}
+			}
 		} catch (SQLException ex) {
-			System.out.println("Error: Could not retrieve size.");
-			return;
+			System.err.println("Error: " + ex.getMessage());
             }
-		String passID = "P" + curr;
 		String query2 = "Insert Into nathanlamont.Pass (passID, memberID, numUses, passType, price, exprDATE) VALUES (?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement query = dbconn.prepareStatement(query2)) {
                 query.setString(1, passID);
@@ -210,7 +216,7 @@ public class SkiPassHandler {
             }
 		boolean expired = expDate.compareTo(today2) < 0;
 		if (expired || curval == 0) {
-			try (PreparedStatement query2 = dbconn.prepareStatement("Delete From nathanlamont.Rental Where passID = ?")) {
+			try (PreparedStatement query2 = dbconn.prepareStatement("Delete From nathanlamont.pass Where passID = ?")) {
 					query2.setString(1, passID);
 					query2.executeUpdate();
 			} catch (SQLException ex) {
