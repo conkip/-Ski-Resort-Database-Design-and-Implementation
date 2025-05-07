@@ -121,7 +121,7 @@ public class RentalHandler {
       // Insert the new rental record
       String sql =
           "INSERT INTO nathanlamont.Rental (rentalID, equipmentID, passID, rentalTime, returnStatus) "
-              + "VALUES (nathanlamont.rental_seq.NEXTVAL, "
+              + "VALUES ("
               + rentalID
               + ", "
               + equipmentID

@@ -53,7 +53,7 @@ public class SkiPassHandler {
 		double price;
 		String expDate;
 		int curr = 0;
-		String query1 = "SELECT COUNT(*) AS count FROM nathanlamont.Pass;";
+		String query1 = "SELECT COUNT(*) AS count FROM nathanlamont.Pass";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate today = LocalDate.now();
 		
@@ -92,7 +92,7 @@ public class SkiPassHandler {
 		        curr = rset.getInt("count") + 1;
 		      }
 		} catch (SQLException ex) {
-			System.out.println("Error: Could not connect to database");
+			System.out.println("Error: Could not retrieve size.");
 			return;
             }
 		String passID = "P" + curr;
@@ -107,7 +107,7 @@ public class SkiPassHandler {
                 query.executeUpdate();
 				System.out.println("Successfully entered new Ski Pass for user " + passID);
 		} catch (SQLException ex) {
-			System.out.println("Error: Could not connect to database");
+			System.out.println("Error: Could not complete query.");
             }
 	}
 
@@ -133,7 +133,7 @@ public class SkiPassHandler {
 		int curval = 0;
         int val;
 		try (Scanner sc = new Scanner(System.in)) {
-            System.out.print("Enter Member ID of Pass: ");
+            System.out.print("Enter PassID: ");
             passID = sc.nextLine();
             String query = "Select numUses from nathanlamont.Pass Where passID = ?";
             try (PreparedStatement query2 = dbconn.prepareStatement(query)) {
@@ -145,7 +145,7 @@ public class SkiPassHandler {
 				} catch (SQLException ex) {
 					System.out.println("Error: Could not connect to database");
 				}
-				System.out.println("Current Remaining Uses for Pass " + passID + ": " + curval);
+				System.out.println("\nCurrent Remaining Uses for Pass " + passID + ": " + curval);
 				System.out.print("\nIncrease Remaining Uses by: ");
 			val = 0;
 			try {
@@ -192,12 +192,12 @@ public class SkiPassHandler {
 	public static void deletePass(Connection dbconn) {
 		String passID;
 		Scanner sc = new Scanner(System.in);
-		System.out.print("Enter Member ID of Pass: ");
+		System.out.print("Enter PassID: ");
 		passID = sc.nextLine();
 		int curval = 0;
 		Date expDate = null;
 		LocalDate today = LocalDate.now();
-		Date today2 = (Date) Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		java.sql.Date today2 = java.sql.Date.valueOf(today);
 		try (PreparedStatement query = dbconn.prepareStatement("Select numUses, exprDate from nathanlamont.Pass Where passID = ?")) {
                 query.setString(1, passID);
                 ResultSet rset = query.executeQuery();
@@ -210,13 +210,25 @@ public class SkiPassHandler {
             }
 		boolean expired = expDate.compareTo(today2) < 0;
 		if (expired || curval == 0) {
+			try (PreparedStatement query2 = dbconn.prepareStatement("Delete From nathanlamont.Rental Where passID = ?")) {
+					query2.setString(1, passID);
+					query2.executeUpdate();
+			} catch (SQLException ex) {
+				System.out.println("SQL Error: " + ex.getMessage());
+				}
+			try (PreparedStatement query2 = dbconn.prepareStatement("Delete From nathanlamont.LiftLog Where passID = ?")) {
+					query2.setString(1, passID);
+					query2.executeUpdate();
+			} catch (SQLException ex) {
+				System.out.println("SQL Error: " + ex.getMessage());
+				}
 			try (PreparedStatement query2 = dbconn.prepareStatement("Delete From nathanlamont.Pass Where passID = ?")) {
 					update(dbconn, "delete", passID);
 					query2.setString(1, passID);
 					query2.executeUpdate();
 					System.out.println("Successfully deleted Ski Pass " + passID);
 			} catch (SQLException ex) {
-				System.out.println("SQL Error: " + ex.getMessage());
+				System.out.println("SQL Error: " + ex.getLocalizedMessage());
 				}
 		}
 		else {
